@@ -4,6 +4,7 @@ const cors = require("cors");
 const { PORT, DB_URL } = require("./config");
 const app = express();
 
+const userRoute = require("./routes/user.route");
 // Middlewares
 app.use(cors());
 app.use(express.json());
@@ -17,6 +18,9 @@ mongoose
   .catch((err) => {
     console.error(`Error connecting to database ${err}`);
   });
+
+// Routes
+app.use("/api/users", userRoute);
 
 // Server
 app.listen(PORT, () => {
