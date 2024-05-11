@@ -1,11 +1,11 @@
-const Users = require("../models/user.model");
+const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const { JWT_SECRET } = require("../config");
 const jwt = require("jsonwebtoken");
 
 //Get all users
 exports.getAll = (req, res) => {
-  Users.find()
+  User.find()
     .then((data) => res.status(200).json(data))
     .catch((err) => {
       return res.status(500).json({ error: `Server Error ${err}` });
@@ -22,11 +22,11 @@ exports.register = (req, res) => {
   //Hash the password with 10 rounds of salt
   bcrypt.hash(password, 10).then((hashedPassword) => {
     //Check if email already exists in database
-    Users.findOne({ email })
+    User.findOne({ email })
       .then((user) => {
         if (user) return res.status(400).json({ error: "User with email already exists!" });
 
-        const newUser = new Users({
+        const newUser = new User({
           firstname,
           lastname,
           email,
@@ -53,7 +53,7 @@ exports.register = (req, res) => {
 exports.login = (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ error: "Please provide all fields." });
-  Users.findOne({ email })
+  User.findOne({ email })
     .then((user) => {
       if (!user) return res.status(401).json({ error: "Invalid credentials" });
 
