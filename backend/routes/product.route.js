@@ -3,8 +3,9 @@ const router = express.Router();
 const product = require("../controllers/product.controller");
 
 router.get("/", product.getAll);
+router.post("/", product.addOne);
 router.get("/:id", product.getOne);
 router.put("/:id", product.updateOne);
-router.post("/", product.addOne);
+router.delete("/:id", product.deleteOne);
 
 module.exports = router;

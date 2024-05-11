@@ -6,6 +6,7 @@ const app = express();
 
 const userRoute = require("./routes/user.route");
 const productRoute = require("./routes/product.route");
+const orderRoute = require("./routes/order.route");
 // Middlewares
 app.use(cors());
 app.use(express.json());
@@ -23,6 +24,7 @@ mongoose
 // Routes
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
+app.use("/api/orders", orderRoute);
 
 // Server
 app.listen(PORT, () => {
