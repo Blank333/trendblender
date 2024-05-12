@@ -21,7 +21,7 @@
   color: var(--var-secondary-color);
 }
 .bg-custom {
-  background-color: var(--var-secondary-color);
+  background-color: var(--var-secondary-color) !important;
 }
 
 .link-custom-unstyled {
