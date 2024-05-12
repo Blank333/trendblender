@@ -16,7 +16,7 @@ function Product({ product }) {
           }
           alt='Product Image'
           height={300}
-          className='object-fit-cover '
+          className='object-fit-contain'
         />
         <Card.Body className='d-flex flex-column gap-1 justify-content-between'>
           <div className='d-flex justify-content-between'>

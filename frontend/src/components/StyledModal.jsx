@@ -1,23 +1,16 @@
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { Spinner } from "react-bootstrap";
+import StlyedLoading from "./StlyedLoading";
 
 function StyledModal({ show, onHide, title, body, loading }) {
   return (
     <>
       <Modal show={show} onHide={onHide} centered>
-        <Modal.Title className='d-flex justify-content-center py-3 gap-1'>
-          {loading && (
-            <>
-              <Spinner animation='grow' size='sm' role='status'>
-                {/* For accessibility, adding a span on one of the spinners */}
-                <span className='visually-hidden'>Loading...</span>
-              </Spinner>
-              <Spinner animation='grow' size='sm' role='status' />
-              <Spinner animation='grow' size='sm' role='status' />
-            </>
-          )}
-        </Modal.Title>
+        {loading && (
+          <Modal.Title className='d-flex justify-content-center py-3 gap-1'>
+            <StlyedLoading anim='grow' size='sm' />
+          </Modal.Title>
+        )}
         {title && (
           <Modal.Header closeButton>
             <Modal.Title>{title}</Modal.Title>

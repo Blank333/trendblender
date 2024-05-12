@@ -2,6 +2,8 @@ import { useState } from "react";
 import StyledHeading from "./StyledHeading";
 import { Link } from "react-router-dom";
 import StyledModal from "./StyledModal";
+import axios from "axios";
+import { API_URL } from "../../config.js";
 
 function Login() {
   const [show, setShow] = useState(false);
@@ -22,15 +24,34 @@ function Login() {
     e.preventDefault();
     setShow(true);
     setLoading(true);
-
-    setModalInfo("Login successful!");
+    setModalInfo("Processing...");
 
     // Check for all fields
     if (!data.email || !data.password) {
+      setModalInfo("Please fill all fields");
       return;
     }
 
-    clearForm();
+    axios
+      .post(`${API_URL}/users/login`, {
+        email: data.email,
+        password: data.password,
+      })
+      .then((res) => {
+        localStorage.setItem("token", res.data.token);
+        setModalInfo(res.data.message + " Redirecting to home page...");
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 3000);
+        clearForm();
+      })
+      .catch((err) => {
+        setModalInfo(err.response.data.error);
+        console.log(`Error Logging in ${err}`);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const clearForm = () => {
@@ -43,43 +64,44 @@ function Login() {
   return (
     <div className='container d-flex flex-column align-items-center gap-2'>
       <StyledHeading heading='Login' />
-      <form className='w-50 border rounded p-4 d-flex flex-column gap-3'>
-        <div>
-          <label htmlFor='email' className='form-label text-secondary'>
-            Email
-          </label>
-          <input
-            type='email'
-            className='form-control shadow-none'
-            id='email'
-            value={data.email}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor='password' className='form-label text-secondary'>
-            Password
-          </label>
-          <input
-            type='password'
-            className='form-control shadow-none'
-            id='password'
-            value={data.password}
-            onChange={handleChange}
-          />
-        </div>
+      <div className='col-lg-6 col-12'>
+        <form className='border rounded p-4 d-flex flex-column gap-3'>
+          <div>
+            <label htmlFor='email' className='form-label text-secondary'>
+              Email
+            </label>
+            <input
+              type='email'
+              className='form-control shadow-none'
+              id='email'
+              value={data.email}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor='password' className='form-label text-secondary'>
+              Password
+            </label>
+            <input
+              type='password'
+              className='form-control shadow-none'
+              id='password'
+              value={data.password}
+              onChange={handleChange}
+            />
+          </div>
 
-        <button type='submit' className='btn bg-success-subtle hover-color-custom' onClick={handleSubmit}>
-          Login
-        </button>
-      </form>
-      <p className='w-50 '>
-        New user?{" "}
-        <Link to='/register' className='text-success'>
-          Register here!
-        </Link>
-      </p>
-
+          <button type='submit' className='btn bg-success-subtle hover-color-custom' onClick={handleSubmit}>
+            Login
+          </button>
+        </form>
+        <p>
+          New user?
+          <Link to='/register' className='text-success'>
+            Register here!
+          </Link>
+        </p>
+      </div>
       <StyledModal show={show} setShow={setShow} body={modalInfo} onHide={() => setShow(false)} loading={loading} />
     </div>
   );
