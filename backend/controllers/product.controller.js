@@ -1,10 +1,30 @@
 const Product = require("../models/product.model");
 
-//Get all products
-exports.getAll = (req, res) => {
-  Product.find()
+// Total items
+exports.getCount = (req, res) => {
+  Product.countDocuments()
     .then((data) => {
-      res.status(200).json({ message: data });
+      return res.status(200).json({ message: data });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: `Server Error ${err}` });
+    });
+};
+
+//Get products in pages
+exports.getAll = (req, res) => {
+  const page = req.query.page || 1;
+  const limit = req.query.limit || 12;
+
+  if (page <= 0 || limit <= 0) {
+    return res.status(400).json({ error: "Invalid request" });
+  }
+
+  Product.find()
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .then((data) => {
+      return res.status(200).json({ message: data });
     })
     .catch((err) => {
       return res.status(500).json({ error: `Server Error ${err}` });
@@ -51,7 +71,7 @@ exports.addOne = (req, res) => {
 
 //Update one product with ID
 exports.updateOne = (req, res) => {
-  const { name, price, description, imageUrl, stock } = req.body;
+  const { name, price, description, imageUrl, stock, rating } = req.body;
   const { id } = req.params;
 
   const updatedInfo = {
@@ -60,6 +80,7 @@ exports.updateOne = (req, res) => {
     description,
     imageUrl,
     stock,
+    rating,
   };
 
   Product.findByIdAndUpdate(id, updatedInfo, { new: true, runValidators: true })
