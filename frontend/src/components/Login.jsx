@@ -108,7 +108,7 @@ function Login() {
           </button>
         </form>
         <p>
-          New user?
+          New user?{" "}
           <Link to='/register' className='text-success'>
             Register here!
           </Link>

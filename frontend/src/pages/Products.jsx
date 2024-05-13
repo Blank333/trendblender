@@ -17,12 +17,7 @@ function Products() {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`${API_URL}/products`, {
-        params: {
-          page,
-          limit,
-        },
-      })
+      .get(`${API_URL}/products?page=${page}&limit=${limit}`)
       .then((res) => {
         setProducts(res.data.message);
         setLoading(false);

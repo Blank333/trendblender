@@ -4,6 +4,10 @@ import Products from "./pages/Products.jsx";
 import Login from "./components/Login.jsx";
 import Register from "./components/Register.jsx";
 import App from "./App.jsx";
+import ProductDetails from "./pages/ProductDetails.jsx";
+import AdminPanel from "./pages/AdminPanel.jsx";
+import ManageProducts from "./components/ManageProducts.jsx";
+import AdminStatus from "./components/AdminStatus.jsx";
 
 const router = createBrowserRouter([
   {
@@ -11,20 +15,38 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/",
+        path: "",
         element: <Home />,
       },
       {
-        path: "/products",
+        path: "products",
         element: <Products />,
       },
       {
-        path: "/login",
+        path: "login",
         element: <Login />,
       },
       {
-        path: "/register",
+        path: "register",
         element: <Register />,
+      },
+      {
+        path: "products/:id",
+        element: <ProductDetails />,
+      },
+    ],
+  },
+  {
+    path: "/admin",
+    element: <AdminPanel />,
+    children: [
+      {
+        path: "",
+        element: <AdminStatus />,
+      },
+      {
+        path: "products",
+        element: <ManageProducts />,
       },
     ],
   },

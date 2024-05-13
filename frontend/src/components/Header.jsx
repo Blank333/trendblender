@@ -35,7 +35,6 @@ function Header() {
         .then((res) => {
           const userInfo = { ...res.data.message, token };
           dispatch(addUser(userInfo));
-          console.log(res.data.message);
         })
         .catch((err) => {
           console.error(err);
@@ -78,21 +77,23 @@ function Header() {
                   {userInfo.firstname}
                 </Dropdown.Toggle>
                 <Dropdown.Menu className='bg-success-subtle '>
-                  <Dropdown.Item className='hover-color-custom'>Orders</Dropdown.Item>
-                  <Dropdown.Item className='hover-color-custom'>Profile</Dropdown.Item>
-                  <Dropdown.Item className='hover-color-custom'>
-                    <NavLink className='link-custom-unstyled' to='/' onClick={handleLogout}>
-                      Logout
+                  {userInfo.isAdmin && (
+                    <NavLink className='link-custom-unstyled' to='/admin'>
+                      <Dropdown.ItemText className='hover-color-custom'>Admin Panel</Dropdown.ItemText>
                     </NavLink>
-                  </Dropdown.Item>
+                  )}
+                  <Dropdown.ItemText className='hover-color-custom'>Orders</Dropdown.ItemText>
+                  <Dropdown.ItemText className='hover-color-custom'>Profile</Dropdown.ItemText>
+
+                  <NavLink className='link-custom-unstyled' to='/' onClick={handleLogout}>
+                    <Dropdown.ItemText className='hover-color-custom'>Logout</Dropdown.ItemText>
+                  </NavLink>
                 </Dropdown.Menu>
               </Dropdown>
             ) : (
-              <button className='btn bg-custom text-light hover-color-custom w-100'>
-                <NavLink className='link-custom-unstyled' to='/login'>
-                  Login
-                </NavLink>
-              </button>
+              <NavLink className='link-custom-unstyled' to='/login'>
+                <button className='btn bg-custom text-light hover-color-custom w-100'>Login</button>
+              </NavLink>
             )}
           </div>
         </div>

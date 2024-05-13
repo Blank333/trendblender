@@ -13,7 +13,6 @@ function Rating({ productRating }) {
               className='text-warning'
               key={value}
               icon={value <= productRating ? solidStar : regularStar}
-              style={{ cursor: "pointer" }}
             />
           ))}
         </div>

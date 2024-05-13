@@ -7,21 +7,25 @@ const userSlice = createSlice({
     lastname: "",
     email: "",
     token: "",
+    isAdmin: false,
   },
   reducers: {
     addUser: (state, action) => {
       console.log("dispatched");
-      const { firstname, lastname, email, token } = action.payload;
+      const { firstname, lastname, email, token, isAdmin } = action.payload;
       state.firstname = firstname;
       state.lastname = lastname;
       state.email = email;
       state.token = token;
+      state.isAdmin = isAdmin;
     },
     removeUser: () => {
       return {
-        name: "",
+        firstname: "",
+        lastname: "",
         email: "",
         token: "",
+        isAdmin: false,
       };
     },
   },
