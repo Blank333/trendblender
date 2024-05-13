@@ -20,6 +20,10 @@
 .text-custom {
   color: var(--var-secondary-color);
 }
+
+.bg-custom-main {
+  background-color: var(--var-main-color) !important;
+}
 .bg-custom {
   background-color: var(--var-secondary-color) !important;
 }

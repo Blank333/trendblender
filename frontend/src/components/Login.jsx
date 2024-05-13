@@ -4,11 +4,21 @@ import { Link } from "react-router-dom";
 import StyledModal from "./StyledModal";
 import axios from "axios";
 import { API_URL } from "../../config.js";
+import { useDispatch } from "react-redux";
+import { addUser } from "../redux/slices/userSlice.js";
 
 function Login() {
   const [show, setShow] = useState(false);
   const [modalInfo, setModalInfo] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const handleDispatch = (user) => {
+    const token = localStorage.getItem("token");
+    const userInfo = { ...user, token };
+    dispatch(addUser(userInfo));
+  };
 
   const [data, setData] = useState({
     email: "",
@@ -39,6 +49,8 @@ function Login() {
       })
       .then((res) => {
         localStorage.setItem("token", res.data.token);
+        localStorage.setItem("userEmail", res.data.user.email);
+        handleDispatch(res.data.user);
         setModalInfo(res.data.message + " Redirecting to home page...");
         setTimeout(() => {
           window.location.href = "/";
