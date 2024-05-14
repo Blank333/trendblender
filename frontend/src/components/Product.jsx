@@ -14,7 +14,7 @@ function Product({ product }) {
             src={
               product.imageUrl
                 ? product.imageUrl
-                : "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.vectorstock.com%2Fi%2Fpreview-1x%2F65%2F30%2Fdefault-image-icon-missing-picture-page-vector-40546530.jpg&f=1&nofb=1&ipt=61fee7e7fc7c23f86da6e0b10ea0ca77418f79794d4b28fb29a15dee1f96c969&ipo=images"
+                : "https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihatdA4DIuyG7MLUMAOYqjcyKDZo0-OuBi8Y2lZ4NysvuatNgGi3-mQ83IAvHWh7YO9BchwowGWvzCgg5QzGWAEhdGhboJSp6vw=w2560-h1240"
             }
             alt='Product Image'
             height={300}

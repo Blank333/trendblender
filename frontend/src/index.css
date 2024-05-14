@@ -6,6 +6,7 @@
 :root {
   --var-main-color: rgb(99, 199, 219);
   --var-secondary-color: rgb(18, 27, 37);
+  --var-successSub-color: hsl(153, 31%, 86%);
 }
 
 /* CSS Reset */

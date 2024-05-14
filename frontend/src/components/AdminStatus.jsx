@@ -40,7 +40,7 @@ function AdminStatus() {
 
   return (
     <div className='vh-100'>
-      <StyledHeading heading='Website Status' />
+      <StyledHeading heading='Website Status' custom='bg-danger-subtle' />
       <Table striped bordered className='text-center'>
         <thead>
           <tr>

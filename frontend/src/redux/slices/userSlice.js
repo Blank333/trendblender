@@ -11,7 +11,6 @@ const userSlice = createSlice({
   },
   reducers: {
     addUser: (state, action) => {
-      console.log("dispatched");
       const { firstname, lastname, email, token, isAdmin } = action.payload;
       state.firstname = firstname;
       state.lastname = lastname;

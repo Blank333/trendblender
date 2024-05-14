@@ -2,7 +2,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import StlyedLoading from "./StlyedLoading";
 
-function StyledModal({ show, onHide, title, body, loading }) {
+function StyledModal({ show, onHide, title, body, loading, onOK = onHide }) {
   return (
     <>
       <Modal show={show} onHide={onHide} centered>
@@ -18,7 +18,7 @@ function StyledModal({ show, onHide, title, body, loading }) {
         )}
         {body && <Modal.Body>{body}</Modal.Body>}
         <Modal.Footer className='d-flex justify-content-start '>
-          <Button className='bg-success-subtle hover-color-custom text-black border-0' onClick={onHide}>
+          <Button className='bg-success-subtle hover-color-custom text-black border-0' onClick={onOK}>
             OK
           </Button>
         </Modal.Footer>

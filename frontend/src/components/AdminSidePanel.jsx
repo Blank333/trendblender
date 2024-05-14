@@ -4,21 +4,22 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { NavLink } from "react-router-dom";
+import "./AdminSidePanel.css";
 function AdminSidePanel() {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   return (
-    <div className='position-fixed start-0 z-2' style={{ width: "50px" }}>
+    <div className='position-fixed start-0 z-2 sm-position-bottom' style={{ width: "50px" }}>
       <Button
-        className='bg-transparent text-black shadow-none border-0 bg-success-subtle rounded-start-0 '
+        className='bg-transparent text-black shadow-none border-0 bg-danger-subtle rounded-start-0 side-button'
         onClick={handleShow}
       >
         <FontAwesomeIcon icon={faChevronRight} />
       </Button>
 
-      <Offcanvas show={show} onHide={handleClose} className='bg-success-subtle'>
+      <Offcanvas show={show} onHide={handleClose} className='bg-danger-subtle'>
         <Offcanvas.Header className='d-flex justify-content-between'>
           <Offcanvas.Title>Menu</Offcanvas.Title>
           <Button className='bg-transparent text-black shadow-none border-0' onClick={handleClose}>

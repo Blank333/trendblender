@@ -1,4 +1,5 @@
 import Pagination from "react-bootstrap/Pagination";
+import "./StyledPagination.css";
 
 function StyledPagination({ page, setPage, lastPage }) {
   return (
