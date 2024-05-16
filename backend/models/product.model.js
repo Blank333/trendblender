@@ -16,6 +16,8 @@ const productSchema = mongoose.Schema(
     },
     imageUrl: {
       type: String,
+      default:
+        "https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihatdA4DIuyG7MLUMAOYqjcyKDZo0-OuBi8Y2lZ4NysvuatNgGi3-mQ83IAvHWh7YO9BchwowGWvzCgg5QzGWAEhdGhboJSp6vw=w2560-h1240",
     },
     rating: {
       type: Number,

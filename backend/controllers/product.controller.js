@@ -13,14 +13,17 @@ exports.getCount = (req, res) => {
 
 //Get products in pages
 exports.getAll = (req, res) => {
-  const page = req.query.page || 1;
-  const limit = req.query.limit || 12;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 12;
+  const sort = parseInt(req.query.sort) || 1;
 
   if (page <= 0 || limit <= 0) {
     return res.status(400).json({ error: "Invalid request" });
   }
 
+  //Sort by date, then make pages
   Product.find()
+    .sort({ createdAt: sort })
     .skip((page - 1) * limit)
     .limit(limit)
     .then((data) => {
@@ -71,7 +74,7 @@ exports.addOne = (req, res) => {
 
 //Update one product with ID
 exports.updateOne = (req, res) => {
-  const { name, price, description, imageUrl, stock, rating } = req.body;
+  const { name, price, description, imageUrl, stock } = req.body;
   const { id } = req.params;
 
   const updatedInfo = {
@@ -80,13 +83,12 @@ exports.updateOne = (req, res) => {
     description,
     imageUrl,
     stock,
-    rating,
   };
 
   Product.findByIdAndUpdate(id, updatedInfo, { new: true, runValidators: true })
     .then((data) => {
       if (!data) return res.status(400).json({ error: "Something went wrong!" });
-      return res.status(200).json({ message: data });
+      return res.status(200).json({ message: `Updated product successfuly! (${data._id})` });
     })
     .catch((err) => {
       return res.status(500).json({ error: `Server error ${err}` });
@@ -100,7 +102,7 @@ exports.deleteOne = (req, res) => {
   Product.findByIdAndDelete(id)
     .then((data) => {
       if (!data) return res.status(400).json({ error: "Something went wrong!" });
-      return res.status(200).json({ message: data });
+      return res.status(200).json({ message: `Deleted product successfuly! (${data._id})` });
     })
     .catch((err) => {
       return res.status(500).json({ error: `Server error ${err}` });

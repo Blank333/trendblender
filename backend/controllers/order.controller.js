@@ -3,6 +3,17 @@ const User = require("../models/user.model");
 const Product = require("../models/product.model");
 const mongoose = require("mongoose");
 
+// Total orders
+exports.getCount = (req, res) => {
+  Order.countDocuments()
+    .then((data) => {
+      return res.status(200).json({ message: data });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: `Server Error ${err}` });
+    });
+};
+
 //Get all orders
 exports.getAll = (req, res) => {
   Order.find()

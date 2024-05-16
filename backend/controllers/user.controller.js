@@ -3,10 +3,44 @@ const bcrypt = require("bcrypt");
 const { JWT_SECRET } = require("../config");
 const jwt = require("jsonwebtoken");
 
+// Authenticate user
+exports.authenticate = (req, res) => {
+  const { user } = req;
+  return user ? res.status(200).json({ message: user }) : res.status(500).json({ error: "Unauthorized" });
+};
+
+// Total users
+exports.getCount = (req, res) => {
+  User.countDocuments()
+    .then((data) => {
+      return res.status(200).json({ message: data });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: `Server Error ${err}` });
+    });
+};
+
 //Get all users
 exports.getAll = (req, res) => {
-  User.find()
-    .then((data) => res.status(200).json(data))
+  //Remove password from returned users
+  User.find({}, { password: 0 })
+    .then((users) => {
+      return res.status(200).json({ message: users });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: `Server Error ${err}` });
+    });
+};
+
+//Get one user
+exports.getOne = (req, res) => {
+  const { email } = req.params;
+  //Remove password from returned user
+  User.findOne({ email }, { password: 0 })
+    .then((user) => {
+      if (!user) return res.status(404).json({ error: "User not found" });
+      return res.status(200).json({ message: user });
+    })
     .catch((err) => {
       return res.status(500).json({ error: `Server Error ${err}` });
     });
@@ -62,7 +96,12 @@ exports.login = (req, res) => {
         .then((compare) => {
           if (!compare) return res.status(401).json({ error: "Invalid credentials" });
           const jwtToken = jwt.sign({ _id: user._id }, JWT_SECRET);
-          return res.status(200).json({ message: "Logged in successfully!", token: jwtToken });
+          const userInfo = {
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email,
+          };
+          return res.status(200).json({ message: "Logged in successfully!", token: jwtToken, user: userInfo });
         })
         .catch((err) => {
           return res.status(500).json({ error: `Server Error ${err}` });
