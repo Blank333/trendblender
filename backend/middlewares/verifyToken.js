@@ -10,6 +10,7 @@ exports.verifyToken = (req, res, next) => {
 
   jwt.verify(token, JWT_SECRET, (err, data) => {
     if (err) return res.status(401).json({ error: "Unauthorized" });
+
     const { _id } = data;
     //Not selecting the password field
     User.findById(_id, { password: 0 })

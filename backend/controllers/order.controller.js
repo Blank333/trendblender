@@ -16,8 +16,29 @@ exports.getCount = (req, res) => {
 
 //Get all orders
 exports.getAll = (req, res) => {
+  //For pagination and sorting
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 12;
+  const sort = parseInt(req.query.sort) || 1;
+
+  if (page <= 0 || limit <= 0) {
+    return res.status(400).json({ error: "Invalid request" });
+  }
+
+  //Sorting by date and populating the user and products fields
   Order.find()
-    .then((data) => res.status(200).json(data))
+    .sort({ createdAt: sort })
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .populate("user", "firstname lastname email")
+    .populate({
+      path: "products._id",
+      model: "Product",
+      select: "name",
+    })
+    .then((data) => {
+      return res.status(200).json({ message: data });
+    })
     .catch((err) => {
       return res.status(500).json({ error: `Server Error ${err}` });
     });
@@ -35,10 +56,23 @@ exports.getAllByUser = (req, res) => {
 
 //Add new order
 exports.addOne = (req, res) => {
-  const { shipping, payment, clientNotes, products, user } = req.body;
+  const { shipping, payment, clientNotes, products } = req.body;
+  const { user } = req;
 
-  if (!shipping || !shipping.address || !shipping.cost || !payment || products.length === 0 || !user)
+  // Validations for empty fields
+  if (
+    products.length === 0 ||
+    !payment ||
+    !shipping ||
+    !shipping.cost ||
+    !shipping.address ||
+    !shipping.address.city ||
+    !shipping.address.pincode ||
+    !shipping.address.state ||
+    !shipping.address.street
+  )
     return res.status(400).json({ error: "Please provide required fields" });
+
   const totalCost = 0;
 
   const productIds = products.map((product) => product._id);
@@ -73,6 +107,25 @@ exports.addOne = (req, res) => {
         .catch((err) => {
           return res.status(500).json({ error: `Server error ${err}` });
         });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: `Server error ${err}` });
+    });
+};
+
+//Update Order
+exports.updateOne = (req, res) => {
+  const { status, deliveryDate } = req.body;
+  const { id } = req.params;
+
+  const updatedInfo = {
+    status,
+    deliveryDate,
+  };
+  Order.findByIdAndUpdate(id, updatedInfo, { new: true, runValidators: true })
+    .then((data) => {
+      if (!data) return res.status(400).json({ error: "Something went wrong!" });
+      return res.status(200).json({ message: `Updated product successfuly! (${data._id})` });
     })
     .catch((err) => {
       return res.status(500).json({ error: `Server error ${err}` });

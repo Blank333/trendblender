@@ -13,6 +13,7 @@ exports.getCount = (req, res) => {
 
 //Get products in pages
 exports.getAll = (req, res) => {
+  //For pagination and sorting
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 12;
   const sort = parseInt(req.query.sort) || 1;
@@ -21,7 +22,7 @@ exports.getAll = (req, res) => {
     return res.status(400).json({ error: "Invalid request" });
   }
 
-  //Sort by date, then make pages
+  //Sorting by date
   Product.find()
     .sort({ createdAt: sort })
     .skip((page - 1) * limit)

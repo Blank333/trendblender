@@ -2,18 +2,34 @@ const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema.Types;
 
 //Seperate schema to make required work (https://mongoosejs.com/docs/validation.html#required-validators-on-nested-objects)
+
+const addressSchema = mongoose.Schema({
+  city: {
+    type: String,
+    required: true,
+  },
+  pincode: {
+    type: String,
+    required: true,
+  },
+  street: {
+    type: String,
+    required: true,
+  },
+  state: {
+    type: String,
+    required: true,
+  },
+});
+
 const shippingSchema = mongoose.Schema({
   address: {
-    type: String,
+    type: addressSchema,
     required: true,
   },
   cost: {
     type: Number,
     required: true,
-  },
-  deliveryDate: {
-    type: Date,
-    default: new Date().getTime() + 1000 * 60 * 60 * 24 * 7,
   },
 });
 
@@ -37,7 +53,7 @@ const orderSchema = mongoose.Schema(
     status: {
       type: String,
       default: "Processing",
-      enum: ["Processing", "Shipped", "Delivered", "Cancelled"],
+      enum: ["Processing", "Confirmed", "Shipped", "Delivered", "Cancelled"],
     },
     payment: {
       type: String,
@@ -49,6 +65,10 @@ const orderSchema = mongoose.Schema(
     },
     clientNotes: {
       type: String,
+    },
+    deliveryDate: {
+      type: Date,
+      default: new Date().getTime() + 1000 * 60 * 60 * 24 * 7,
     },
     products: {
       type: [productSchema],

@@ -22,8 +22,20 @@ exports.getCount = (req, res) => {
 
 //Get all users
 exports.getAll = (req, res) => {
+  //For pagination and sorting
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 12;
+  const sort = parseInt(req.query.sort) || 1;
+
+  if (page <= 0 || limit <= 0) {
+    return res.status(400).json({ error: "Invalid request" });
+  }
+
   //Remove password from returned users
   User.find({}, { password: 0 })
+    .sort({ createdAt: sort })
+    .skip((page - 1) * limit)
+    .limit(limit)
     .then((users) => {
       return res.status(200).json({ message: users });
     })
@@ -40,6 +52,42 @@ exports.getOne = (req, res) => {
     .then((user) => {
       if (!user) return res.status(404).json({ error: "User not found" });
       return res.status(200).json({ message: user });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: `Server Error ${err}` });
+    });
+};
+
+//Update one user with ID
+exports.deleteOne = (req, res) => {
+  const { id } = req.params;
+
+  User.findByIdAndDelete(id)
+    .then((user) => {
+      if (!user) return res.status(404).json({ error: "User not found" });
+      return res.status(200).json({ message: `User has been deleted! (${user._id})` });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: `Server Error ${err}` });
+    });
+};
+
+//Update one user with ID
+exports.updateOne = (req, res) => {
+  const { firstname, lastname, email, isAdmin } = req.body;
+  const { id } = req.params;
+  const updateInfo = {
+    firstname,
+    lastname,
+    email,
+    isAdmin,
+  };
+
+  //Remove password from returned user
+  User.findByIdAndUpdate(id, updateInfo, { projection: { password: 0 }, new: true, runValidators: true })
+    .then((user) => {
+      if (!user) return res.status(404).json({ error: "User not found" });
+      return res.status(200).json({ message: `User has been updated! (${user._id})` });
     })
     .catch((err) => {
       return res.status(500).json({ error: `Server Error ${err}` });
