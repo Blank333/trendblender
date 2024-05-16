@@ -20,10 +20,12 @@ function Products() {
       .get(`${API_URL}/products?page=${page}&limit=${limit}`)
       .then((res) => {
         setProducts(res.data.message);
-        setLoading(false);
       })
       .catch((err) => {
         console.error(err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [page]);
 

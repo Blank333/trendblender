@@ -12,6 +12,7 @@ function AdminStatus() {
   const [users, setUsers] = useState();
 
   useEffect(() => {
+    //Fetch counts of all collections
     axios
       .get(`${API_URL}/products/count`)
       .then((res) => {

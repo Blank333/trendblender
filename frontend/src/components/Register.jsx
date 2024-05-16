@@ -59,7 +59,7 @@ function Register() {
         setModalInfo(res.data.message + " Redirecting to login page...");
         setTimeout(() => {
           window.location.href = "/login";
-        }, 3000);
+        }, 2000);
       })
       .catch((err) => {
         setModalInfo(err.response.data.error);

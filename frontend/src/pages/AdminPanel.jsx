@@ -1,19 +1,44 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import AdminSidePanel from "../components/AdminSidePanel";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { Container } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import StyledHeading from "../components/StyledHeading";
 
 function AdminPanel() {
+  const userInfo = useSelector((store) => store.user);
+  const navigate = useNavigate();
+
+  //Send unauthorized users back to homepage
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) navigate("/");
+    if (userInfo.token && !userInfo.isAdmin)
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+  }, [userInfo]);
+
   return (
     <>
       <Header />
       <main className='my-4'>
-        <AdminSidePanel />
-        <Container>
-          <Outlet />
-        </Container>
+        {userInfo.isAdmin ? (
+          <>
+            <AdminSidePanel />
+            <Container>
+              <Outlet />
+            </Container>
+          </>
+        ) : (
+          <>
+            <StyledHeading custom='bg-danger container' heading='Unauthorized' />
+          </>
+        )}
       </main>
+
       <Footer />
     </>
   );

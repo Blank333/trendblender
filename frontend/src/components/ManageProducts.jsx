@@ -8,6 +8,7 @@ import StlyedLoading from "./StlyedLoading";
 import StyledModal from "./StyledModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faPlus, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
+import ProductModal from "./ProductModal";
 
 function ManageProducts() {
   const [products, setProducts] = useState([]);
@@ -16,31 +17,51 @@ function ManageProducts() {
   const [totalProducts, setTotalProducts] = useState(1);
   const [loading, setLoading] = useState(false);
   const limit = 12;
+  const sort = -1;
   const [show, setShow] = useState(false);
   const [id, setId] = useState();
+
+  const [create, setCreate] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [deleted, setDeleted] = useState(false);
 
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`${API_URL}/products?page=${page}&limit=${limit}`)
+      .get(`${API_URL}/products?page=${page}&limit=${limit}&sort=${sort}`)
       .then((res) => {
         setProducts(res.data.message);
         setFilteredProducts(res.data.message);
-        setLoading(false);
       })
       .catch((err) => {
         console.error(err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [page]);
 
   useEffect(() => {
-    axios.get(`${API_URL}/products/count`).then((res) => {
-      setTotalProducts(res.data.message);
-    });
+    axios
+      .get(`${API_URL}/products/count`)
+      .then((res) => {
+        setTotalProducts(res.data.message);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }, []);
 
   const handleDelete = (id) => {
-    if (id) alert(id);
+    axios
+      .delete(`${API_URL}/products/${id}`)
+      .then((res) => {
+        setDeleted(res.data.message);
+      })
+      .catch((err) => {
+        setDeleted(err.response.data.error);
+        setProducts([...filteredProducts, ""]);
+      });
   };
 
   const handleSearch = (e) => {
@@ -68,9 +89,12 @@ function ManageProducts() {
       ) : (
         <>
           <div className='d-flex justify-content-between align-items-center w-100'>
-            <Button className='bg-success-subtle border-0 text-black'>
+            {/* Product Creation */}
+            <Button className='bg-success-subtle border-0 text-black' onClick={() => setCreate(true)}>
               New <FontAwesomeIcon icon={faPlus} />
             </Button>
+
+            {/* Search */}
             <InputGroup className='mb-3 w-25'>
               <Form.Control placeholder='Search...' className='shadow-none' onChange={handleSearch} />
               <Button variant='outline-secondary bg-transparent'>
@@ -78,6 +102,8 @@ function ManageProducts() {
               </Button>
             </InputGroup>
           </div>
+
+          {/* All products */}
           <Table striped bordered>
             <thead>
               <tr>
@@ -101,9 +127,12 @@ function ManageProducts() {
                   <td>{product.stock}</td>
 
                   <td className='d-flex gap-2 align-items-center'>
-                    <Button className='bg-success-subtle border-0 text-black'>
+                    {/* Update product */}
+                    <Button className='bg-success-subtle border-0 text-black' onClick={() => setEdit(product)}>
                       Edit <FontAwesomeIcon icon={faPenToSquare} />
                     </Button>
+
+                    {/* Delete product */}
                     <Button
                       className='bg-danger-subtle border-0 text-black'
                       onClick={() => {
@@ -119,7 +148,8 @@ function ManageProducts() {
             </tbody>
           </Table>
           <StyledModal
-            body='Delete product?'
+            title='Delete product?'
+            body={deleted}
             show={show}
             onHide={() => {
               setShow(false);
@@ -128,6 +158,10 @@ function ManageProducts() {
               handleDelete(id);
             }}
           />
+
+          <ProductModal product={edit} show={edit} onHide={() => setEdit(false)} title='Update product' />
+          <ProductModal show={create} onHide={() => setCreate(false)} title='Add new product' />
+
           <StyledPagination page={page} setPage={setPage} lastPage={Math.ceil(totalProducts / limit)} />
         </>
       )}

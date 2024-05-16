@@ -26,12 +26,10 @@ function Header() {
   };
 
   useEffect(() => {
-    const userEmail = localStorage.getItem("userEmail");
     const token = localStorage.getItem("token");
-
     if (token && !userInfo.token) {
       axios
-        .get(`${API_URL}/users/${userEmail}`)
+        .get(`${API_URL}/users/auth`, { headers: { Authorization: token } })
         .then((res) => {
           const userInfo = { ...res.data.message, token };
           dispatch(addUser(userInfo));

@@ -19,10 +19,12 @@ function ProductDetails() {
       .get(`${API_URL}/products/${id}`)
       .then((res) => {
         setProduct(res.data.message);
-        setLoading(false);
       })
       .catch((err) => {
         console.error(err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 

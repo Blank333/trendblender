@@ -49,12 +49,11 @@ function Login() {
       })
       .then((res) => {
         localStorage.setItem("token", res.data.token);
-        localStorage.setItem("userEmail", res.data.user.email);
         handleDispatch(res.data.user);
         setModalInfo(res.data.message + " Redirecting to home page...");
         setTimeout(() => {
           window.location.href = "/";
-        }, 3000);
+        }, 2000);
         clearForm();
       })
       .catch((err) => {
