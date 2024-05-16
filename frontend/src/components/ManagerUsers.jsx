@@ -7,31 +7,33 @@ import { API_URL } from "../../config";
 import StlyedLoading from "./StlyedLoading";
 import StyledModal from "./StyledModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLink, faPenToSquare, faPlus, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
-import ProductModal from "./ProductModal";
+import { faCheck, faPenToSquare, faSearch, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
+import UserModal from "./UserModal";
 
-function ManageProducts() {
-  const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
+function ManageUsers() {
+  const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [page, setPage] = useState(1);
-  const [totalProducts, setTotalProducts] = useState(1);
+  const [totalUsers, setTotalUsers] = useState(1);
   const [loading, setLoading] = useState(false);
   const limit = 12;
   const sort = -1;
-  const [show, setShow] = useState(false);
-  const [id, setId] = useState();
 
-  const [create, setCreate] = useState(false);
   const [edit, setEdit] = useState(false);
   const [deleted, setDeleted] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [show, setShow] = useState(false);
+  const [id, setId] = useState();
 
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`${API_URL}/products?page=${page}&limit=${limit}&sort=${sort}`)
+      .get(`${API_URL}/users?page=${page}&limit=${limit}&sort=${sort}`, {
+        headers: { Authorization: localStorage.getItem("token") },
+      })
       .then((res) => {
-        setProducts(res.data.message);
-        setFilteredProducts(res.data.message);
+        setUsers(res.data.message);
+        setFilteredUsers(res.data.message);
       })
       .catch((err) => {
         console.error(err);
@@ -43,11 +45,11 @@ function ManageProducts() {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/products/count`, {
+      .get(`${API_URL}/users/count`, {
         headers: { Authorization: localStorage.getItem("token") },
       })
       .then((res) => {
-        setTotalProducts(res.data.message);
+        setTotalUsers(res.data.message);
       })
       .catch((err) => {
         console.error(err);
@@ -55,8 +57,10 @@ function ManageProducts() {
   }, []);
 
   const handleDelete = (id) => {
+    setDeleting(true);
+
     axios
-      .delete(`${API_URL}/products/${id}`, {
+      .delete(`${API_URL}/users/${id}`, {
         headers: { Authorization: localStorage.getItem("token") },
       })
       .then((res) => {
@@ -64,43 +68,37 @@ function ManageProducts() {
       })
       .catch((err) => {
         setDeleted(err.response.data.error);
+      })
+      .finally(() => {
+        setDeleting(false);
       });
   };
 
   const handleSearch = (e) => {
-    //If search is empty reset the products
-    if (!e.target.value) return setFilteredProducts(products);
+    //If search is empty reset the users
+    if (!e.target.value) return setFilteredUsers(users);
 
-    //Can search with either name, description or price
-    setFilteredProducts(
-      products.filter(
-        (product) =>
-          product.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
-          product.description.toLowerCase().includes(e.target.value.toLowerCase()) ||
-          product.price.toString().includes(e.target.value)
+    //Can search with either name or email
+    setFilteredUsers(
+      users.filter(
+        (user) =>
+          user.firstname.toLowerCase().includes(e.target.value.toLowerCase()) ||
+          user.lastname.toLowerCase().includes(e.target.value.toLowerCase()) ||
+          user.email.toLowerCase().includes(e.target.value.toLowerCase())
       )
     );
   };
 
   return (
     <div className='d-flex flex-column gap-2 align-items-center'>
-      <StyledHeading heading='Manage Products' custom='bg-danger-subtle' />
+      <StyledHeading heading='Manage Users' custom='bg-danger-subtle' />
       {loading ? (
         <div>
           <StlyedLoading anim='grow' size='sm' />
         </div>
       ) : (
         <>
-          <div className='d-flex justify-content-between align-items-center w-100'>
-            {/* Product Creation */}
-            <Button
-              title='Add new product'
-              className='bg-success-subtle border-0 text-black'
-              onClick={() => setCreate(true)}
-            >
-              New <FontAwesomeIcon icon={faPlus} />
-            </Button>
-
+          <div className='d-flex justify-content-end align-items-center w-100'>
             {/* Search */}
             <InputGroup className='mb-3 w-25'>
               <Form.Control placeholder='Search...' className='shadow-none' onChange={handleSearch} />
@@ -110,71 +108,60 @@ function ManageProducts() {
             </InputGroup>
           </div>
 
-          {/* All products */}
+          {/* All users */}
           <Table striped bordered>
             <thead>
               <tr>
                 <th>S. No.</th>
                 <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Stock</th>
+                <th>E-mail</th>
+                <th>Admin</th>
+                <th>Created At</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {filteredProducts.map((product, index) => (
-                <tr key={product._id}>
+              {filteredUsers.map((user, index) => (
+                <tr key={user._id}>
                   <td>{index + 1 + (page - 1) * limit}</td>
-                  <td>{product.name}</td>
                   <td>
-                    {product.description.length > 100 ? product.description.slice(0, 100) + "..." : product.description}
+                    {user.firstname} {user.lastname}
                   </td>
-                  <td>{product.price}</td>
-                  <td>{product.stock}</td>
+                  <td>{user.email}</td>
+                  <td className={(user.isAdmin ? "bg-success-subtle" : "bg-danger-subtle") + " text-center"}>
+                    <FontAwesomeIcon icon={user.isAdmin ? faCheck : faXmark} />
+                  </td>
+                  <td>{new Date(user.createdAt).toLocaleDateString()}</td>
 
                   <td className='d-flex gap-2 align-items-center justify-content-center'>
-                    {/* Update product */}
+                    {/* Update user */}
                     <Button
-                      title='Edit product'
+                      title='Edit user'
                       className='bg-success-subtle border-0 text-black'
-                      onClick={() => setEdit(product)}
+                      onClick={() => setEdit(user)}
                     >
                       <FontAwesomeIcon icon={faPenToSquare} />
                     </Button>
 
-                    {/* Delete product */}
+                    {/* Delete user */}
                     <Button
-                      title='Delete product'
+                      title='Delete user'
                       className='bg-danger-subtle border-0 text-black'
                       onClick={() => {
                         setShow(true);
-                        setId(product._id);
+                        setId(user._id);
                       }}
                     >
                       <FontAwesomeIcon icon={faTrash} />
                     </Button>
-
-                    {/* Product link */}
-                    <a href={`/products/${product._id}`}>
-                      <Button
-                        title='Go to product page'
-                        className='bg-primary-subtle border-0 text-black'
-                        onClick={() => {
-                          setShow(true);
-                          setId(product._id);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faLink} />
-                      </Button>
-                    </a>
                   </td>
                 </tr>
               ))}
             </tbody>
           </Table>
           <StyledModal
-            title='Delete product?'
+            loading={deleting}
+            title='Delete user?'
             body={deleted}
             show={show}
             onHide={() => {
@@ -186,14 +173,13 @@ function ManageProducts() {
             }}
           />
 
-          <ProductModal product={edit} show={edit} onHide={() => setEdit(false)} title='Update product' />
-          <ProductModal show={create} onHide={() => setCreate(false)} title='Add new product' />
+          <UserModal user={edit} show={edit} onHide={() => setEdit(false)} title='Update user' />
 
-          <StyledPagination page={page} setPage={setPage} lastPage={Math.ceil(totalProducts / limit)} />
+          <StyledPagination page={page} setPage={setPage} lastPage={Math.ceil(totalUsers / limit)} />
         </>
       )}
     </div>
   );
 }
 
-export default ManageProducts;
+export default ManageUsers;

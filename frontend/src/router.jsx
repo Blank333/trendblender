@@ -8,6 +8,8 @@ import ProductDetails from "./pages/ProductDetails.jsx";
 import AdminPanel from "./pages/AdminPanel.jsx";
 import ManageProducts from "./components/ManageProducts.jsx";
 import AdminStatus from "./components/AdminStatus.jsx";
+import ManageOrders from "./components/ManageOrders.jsx";
+import ManageUsers from "./components/ManagerUsers.jsx";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +49,14 @@ const router = createBrowserRouter([
       {
         path: "products",
         element: <ManageProducts />,
+      },
+      {
+        path: "orders",
+        element: <ManageOrders />,
+      },
+      {
+        path: "users",
+        element: <ManageUsers />,
       },
     ],
   },

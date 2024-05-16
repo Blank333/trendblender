@@ -39,13 +39,18 @@ function ProductModal({ show, onHide, title = " ", product = false }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoad(true);
+    //If product exists then we update it else we create a new ones
     if (product) {
       axios
-        .put(`${API_URL}/products/${product._id}`, { ...productInfo })
+        .put(
+          `${API_URL}/products/${product._id}`,
+          { ...productInfo },
+          {
+            headers: { Authorization: localStorage.getItem("token") },
+          }
+        )
         .then((res) => {
           setResult(res.data.message);
-
-          console.log(res.data);
         })
         .catch((err) => {
           setResult(err.response.data.error);
@@ -56,7 +61,13 @@ function ProductModal({ show, onHide, title = " ", product = false }) {
         });
     } else {
       axios
-        .post(`${API_URL}/products`, { ...productInfo })
+        .post(
+          `${API_URL}/products`,
+          { ...productInfo },
+          {
+            headers: { Authorization: localStorage.getItem("token") },
+          }
+        )
         .then((res) => {
           setResult(res.data.message);
         })

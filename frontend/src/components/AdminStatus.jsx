@@ -14,7 +14,9 @@ function AdminStatus() {
   useEffect(() => {
     //Fetch counts of all collections
     axios
-      .get(`${API_URL}/products/count`)
+      .get(`${API_URL}/products/count`, {
+        headers: { Authorization: localStorage.getItem("token") },
+      })
       .then((res) => {
         setProducts(res.data.message);
       })
@@ -22,7 +24,9 @@ function AdminStatus() {
         console.error(err);
       });
     axios
-      .get(`${API_URL}/orders/count`)
+      .get(`${API_URL}/orders/count`, {
+        headers: { Authorization: localStorage.getItem("token") },
+      })
       .then((res) => {
         setOrders(res.data.message);
       })
@@ -30,7 +34,9 @@ function AdminStatus() {
         console.error(err);
       });
     axios
-      .get(`${API_URL}/users/count`)
+      .get(`${API_URL}/users/count`, {
+        headers: { Authorization: localStorage.getItem("token") },
+      })
       .then((res) => {
         setUsers(res.data.message);
       })
