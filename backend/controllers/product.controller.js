@@ -1,4 +1,7 @@
 const Product = require("../models/product.model");
+//For handling file upload
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
 
 // Total items
 exports.getCount = (req, res) => {
@@ -107,5 +110,32 @@ exports.deleteOne = (req, res) => {
     })
     .catch((err) => {
       return res.status(500).json({ error: `Server error ${err}` });
+    });
+};
+
+exports.uploadImage = (req, res) => {
+  const image = req.file;
+  if (!image) return res.status(400).json({ error: "Please provide required fields" });
+
+  const options = {
+    use_filename: true,
+    unique_filename: true,
+    overwrite: true,
+  };
+
+  //Upload to cloudinary and send the url back
+  cloudinary.uploader
+    .upload(image.path, options)
+    .then((data) => {
+      return res.status(200).json({ message: `File uploaded successfully`, url: data.secure_url });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: `Server error ${err}` });
+    })
+    .finally(() => {
+      //Delete the locally stored file
+      fs.unlink(image.path, (err) => {
+        if (err) console.error(`Error deleting local file ${err}`);
+      });
     });
 };

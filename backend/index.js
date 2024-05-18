@@ -1,7 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cloudinary = require("cloudinary").v2;
 const cors = require("cors");
-const { PORT, DB_URL } = require("./config");
+const { PORT, DB_URL, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, CLOUDINARY_NAME } = require("./config");
 const app = express();
 
 const userRoute = require("./routes/user.route");
@@ -21,6 +22,13 @@ mongoose
   .catch((err) => {
     console.error(`Error connecting to database ${err}`);
   });
+
+// Image upload
+cloudinary.config({
+  cloud_name: CLOUDINARY_NAME,
+  api_key: CLOUDINARY_API_KEY,
+  api_secret: CLOUDINARY_API_SECRET,
+});
 
 // Routes
 app.use("/api/users", userRoute);

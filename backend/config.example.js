@@ -4,4 +4,6 @@ module.exports = {
     "mongodb+srv://<username>:<password>@cluster0.vbg29v6.mongodb.net/<DBname>?retryWrites=true&w=majority&appName=Cluster0",
   PORT: 3000,
   JWT_SECRET: "secret",
+  CLOUDINARY_API_KEY: "123",
+  CLOUDINARY_API_SECRET: "xyz",
 };
