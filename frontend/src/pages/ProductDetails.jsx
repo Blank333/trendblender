@@ -7,11 +7,17 @@ import { API_URL } from "../../config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import Rating from "../components/Rating";
+import noImage from "../assets/noImage.png";
+import StyledToast from "../components/StyledToast";
+import { useDispatch } from "react-redux";
+import { addProduct } from "../redux/slices/cartSlice";
 
 function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState("");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setLoading(true);
@@ -28,6 +34,25 @@ function ProductDetails() {
       });
   }, []);
 
+  const addToCart = () => {
+    axios
+      .post(
+        `${API_URL}/cart`,
+        { product: product._id },
+        {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        dispatch(addProduct({ product: product, quantity: 1 }));
+        setToast(res.data);
+      })
+      .catch((err) => {
+        setToast(err.response.data);
+      });
+  };
   return (
     <>
       {loading ? (
@@ -42,7 +67,7 @@ function ProductDetails() {
             lg={5}
             style={{ height: "400px" }}
           >
-            <Image src={product.imageUrl} rounded fluid />
+            <Image src={product.imageUrl ? product.imageUrl : noImage} rounded fluid />
           </Col>
           <Col xs={12} lg={4} className='d-flex flex-column gap-3'>
             <div className='border-bottom'>
@@ -62,11 +87,13 @@ function ProductDetails() {
             <Button
               className='bg-success-subtle hover-color-custom text-black border-0 w-100'
               disabled={product.stock === 0}
+              onClick={addToCart}
             >
               <FontAwesomeIcon icon={faShoppingCart} />
               Add to cart
             </Button>
           </Col>
+          <StyledToast toast={toast} onClose={() => setToast("")} />
         </Row>
       )}
     </>

@@ -10,6 +10,7 @@ import ManageProducts from "./components/ManageProducts.jsx";
 import AdminStatus from "./components/AdminStatus.jsx";
 import ManageOrders from "./components/ManageOrders.jsx";
 import ManageUsers from "./components/ManagerUsers.jsx";
+import Cart from "./pages/Cart.jsx";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: "products/:id",
         element: <ProductDetails />,
+      },
+      {
+        path: "cart",
+        element: <Cart />,
       },
     ],
   },

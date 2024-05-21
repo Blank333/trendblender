@@ -5,13 +5,13 @@ import Button from "react-bootstrap/Button";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { NavLink } from "react-router-dom";
 import "./AdminSidePanel.css";
-function AdminSidePanel() {
-  const [show, setShow] = useState(false);
+function AdminSidePanel({ defaultState = false }) {
+  const [show, setShow] = useState(defaultState);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   return (
-    <div className='position-fixed start-0 z-2 sm-position-bottom' style={{ width: "50px" }}>
+    <div className='position-fixed start-0 z-2 sm-position-bottom pb-3' style={{ width: "50px" }}>
       <Button
         className='bg-transparent text-black shadow-none border-0 bg-danger-subtle rounded-start-0 side-button'
         onClick={handleShow}

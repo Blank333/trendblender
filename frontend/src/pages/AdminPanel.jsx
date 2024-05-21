@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import AdminSidePanel from "../components/AdminSidePanel";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -10,6 +10,7 @@ import StyledHeading from "../components/StyledHeading";
 function AdminPanel() {
   const userInfo = useSelector((store) => store.user);
   const navigate = useNavigate();
+  const location = useLocation();
 
   //Send unauthorized users back to homepage
   useEffect(() => {
@@ -27,7 +28,7 @@ function AdminPanel() {
       <main className='my-4'>
         {userInfo.isAdmin ? (
           <>
-            <AdminSidePanel />
+            <AdminSidePanel defaultState={location.pathname === "/admin"} />
             <Container>
               <Outlet />
             </Container>

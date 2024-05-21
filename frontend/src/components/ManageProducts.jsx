@@ -7,8 +7,10 @@ import { API_URL } from "../../config";
 import StlyedLoading from "./StlyedLoading";
 import StyledModal from "./StyledModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLink, faPenToSquare, faPlus, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faImage, faLink, faPenToSquare, faPlus, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
 import ProductModal from "./ProductModal";
+import UploadModal from "./UploadModal";
+import { Link } from "react-router-dom";
 
 function ManageProducts() {
   const [products, setProducts] = useState([]);
@@ -18,12 +20,14 @@ function ManageProducts() {
   const [loading, setLoading] = useState(false);
   const limit = 12;
   const sort = -1;
-  const [show, setShow] = useState(false);
-  const [id, setId] = useState();
 
   const [create, setCreate] = useState(false);
+  const [upload, setUpload] = useState(false);
   const [edit, setEdit] = useState(false);
   const [deleted, setDeleted] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [show, setShow] = useState(false);
+  const [id, setId] = useState();
 
   useEffect(() => {
     setLoading(true);
@@ -55,6 +59,7 @@ function ManageProducts() {
   }, []);
 
   const handleDelete = (id) => {
+    setDeleting(true);
     axios
       .delete(`${API_URL}/products/${id}`, {
         headers: { Authorization: localStorage.getItem("token") },
@@ -64,6 +69,9 @@ function ManageProducts() {
       })
       .catch((err) => {
         setDeleted(err.response.data.error);
+      })
+      .finally(() => {
+        setDeleting(false);
       });
   };
 
@@ -143,6 +151,15 @@ function ManageProducts() {
                       <FontAwesomeIcon icon={faPenToSquare} />
                     </Button>
 
+                    {/* Update Image */}
+                    <Button
+                      title='Update Image'
+                      className='bg-success-subtle border-0 text-black'
+                      onClick={() => setUpload(product)}
+                    >
+                      <FontAwesomeIcon icon={faImage} />
+                    </Button>
+
                     {/* Delete product */}
                     <Button
                       title='Delete product'
@@ -156,18 +173,11 @@ function ManageProducts() {
                     </Button>
 
                     {/* Product link */}
-                    <a href={`/products/${product._id}`}>
-                      <Button
-                        title='Go to product page'
-                        className='bg-primary-subtle border-0 text-black'
-                        onClick={() => {
-                          setShow(true);
-                          setId(product._id);
-                        }}
-                      >
+                    <Link to={`/products/${product._id}`} target='_blank' rel='noopener noreferrer'>
+                      <Button title='Go to product page' className='bg-primary-subtle border-0 text-black'>
                         <FontAwesomeIcon icon={faLink} />
                       </Button>
-                    </a>
+                    </Link>
                   </td>
                 </tr>
               ))}
@@ -175,6 +185,7 @@ function ManageProducts() {
           </Table>
           <StyledModal
             title='Delete product?'
+            loading={deleting}
             body={deleted}
             show={show}
             onHide={() => {
@@ -188,6 +199,7 @@ function ManageProducts() {
 
           <ProductModal product={edit} show={edit} onHide={() => setEdit(false)} title='Update product' />
           <ProductModal show={create} onHide={() => setCreate(false)} title='Add new product' />
+          <UploadModal product={upload} show={upload} onHide={() => setUpload(false)} title='Update product image ' />
 
           <StyledPagination page={page} setPage={setPage} lastPage={Math.ceil(totalProducts / limit)} />
         </>

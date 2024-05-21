@@ -9,11 +9,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../../config";
 import { addUser, removeUser } from "../redux/slices/userSlice";
+import { initializeCart, clearCart } from "../redux/slices/cartSlice";
 import StyledModal from "./StyledModal";
 import { Dropdown } from "react-bootstrap";
 
 function Header() {
   const userInfo = useSelector((store) => store.user);
+  const cartInfo = useSelector((store) => store.cart);
   const dispatch = useDispatch();
 
   const [show, setShow] = useState(false);
@@ -23,6 +25,7 @@ function Header() {
     localStorage.removeItem("token");
     localStorage.removeItem("userEmail");
     dispatch(removeUser());
+    dispatch(clearCart());
   };
 
   useEffect(() => {
@@ -31,8 +34,16 @@ function Header() {
       axios
         .get(`${API_URL}/users/auth`, { headers: { Authorization: token } })
         .then((res) => {
-          const userInfo = { ...res.data.message, token };
-          dispatch(addUser(userInfo));
+          const user = { ...res.data.message, token };
+          dispatch(addUser(user));
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      axios
+        .get(`${API_URL}/cart/me`, { headers: { Authorization: token } })
+        .then((res) => {
+          dispatch(initializeCart({ products: res.data.message.products }));
         })
         .catch((err) => {
           console.error(err);
@@ -47,7 +58,7 @@ function Header() {
           <NavLink className='nav-link' to='/'>
             <img src={logo} className='logo img-fluid object-fit-contain' alt='trendblender logo' />
           </NavLink>
-
+          {/* Search bar */}
           <div className='d-flex w-50 search-custom'>
             <input
               type='search'
@@ -59,36 +70,50 @@ function Header() {
             </button>
           </div>
 
-          <div className='d-flex align-items-start gap-2'>
-            {userInfo.token && (
-              <>
-                <button className='btn bg-custom text-light hover-color-custom'>
-                  <NavLink className='link-custom-unstyled' to='/'>
-                    <FontAwesomeIcon icon={faShoppingCart} />
-                  </NavLink>
-                </button>
-              </>
-            )}
+          {/* User buttons */}
+          <div className='d-flex align-items-center gap-2  '>
             {userInfo.token ? (
-              <Dropdown>
-                <Dropdown.Toggle id='dropdown-basic' className='btn bg-custom text-light hover-color-custom'>
-                  {userInfo.firstname}
-                </Dropdown.Toggle>
-                <Dropdown.Menu className='bg-success-subtle '>
-                  {userInfo.isAdmin && (
-                    <NavLink className='link-custom-unstyled' to='/admin'>
-                      <Dropdown.ItemText className='hover-color-custom'>Admin Panel</Dropdown.ItemText>
-                    </NavLink>
-                  )}
-                  <Dropdown.ItemText className='hover-color-custom'>Orders</Dropdown.ItemText>
-                  <Dropdown.ItemText className='hover-color-custom'>Profile</Dropdown.ItemText>
+              <>
+                {/* Cart */}
+                <div className='position-relative p-2'>
+                  <NavLink className='link-custom-unstyled' to='/cart'>
+                    <button className='btn bg-custom text-light hover-color-custom '>
+                      <FontAwesomeIcon icon={faShoppingCart} />
+                    </button>
 
-                  <NavLink className='link-custom-unstyled' to='/' onClick={handleLogout}>
-                    <Dropdown.ItemText className='hover-color-custom'>Logout</Dropdown.ItemText>
+                    {cartInfo.totalProducts !== 0 && (
+                      <div
+                        className='position-absolute end-0 top-0 rounded-circle bg-danger text-white d-flex align-items-center justify-content-center'
+                        style={{ width: "25px", height: "25px" }}
+                      >
+                        {cartInfo.totalProducts}
+                      </div>
+                    )}
                   </NavLink>
-                </Dropdown.Menu>
-              </Dropdown>
+                </div>
+
+                {/* User profile */}
+                <Dropdown>
+                  <Dropdown.Toggle id='dropdown-basic' className='btn bg-custom text-light hover-color-custom'>
+                    {userInfo.firstname}
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu className='bg-success-subtle '>
+                    {userInfo.isAdmin && (
+                      <NavLink className='link-custom-unstyled' to='/admin'>
+                        <Dropdown.ItemText className='hover-color-custom'>Admin Panel</Dropdown.ItemText>
+                      </NavLink>
+                    )}
+                    <Dropdown.ItemText className='hover-color-custom'>Orders</Dropdown.ItemText>
+                    <Dropdown.ItemText className='hover-color-custom'>Profile</Dropdown.ItemText>
+
+                    <NavLink className='link-custom-unstyled' to='/' onClick={handleLogout}>
+                      <Dropdown.ItemText className='hover-color-custom'>Logout</Dropdown.ItemText>
+                    </NavLink>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </>
             ) : (
+              // Login
               <NavLink className='link-custom-unstyled' to='/login'>
                 <button className='btn bg-custom text-light hover-color-custom w-100'>Login</button>
               </NavLink>
