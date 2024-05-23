@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema.Types;
 
 const productSchema = new mongoose.Schema({
-  _id: {
+  product: {
     type: ObjectId,
     required: true,
   },
@@ -18,13 +18,6 @@ const cartSchema = mongoose.Schema(
     products: {
       type: [productSchema],
       ref: "Product",
-      validate: {
-        validator: (value) => {
-          //Validation for empty array
-          return Array.isArray(value) && value.length > 0;
-        },
-      },
-      message: "No products specified!",
     },
     user: {
       type: ObjectId,

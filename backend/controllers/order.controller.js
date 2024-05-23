@@ -59,12 +59,14 @@ exports.addOne = (req, res) => {
   const { shipping, payment, clientNotes, products } = req.body;
   const { user } = req;
 
+  //Base shipping cost
+  shipping.cost = 100;
+
   // Validations for empty fields
   if (
     products.length === 0 ||
     !payment ||
     !shipping ||
-    !shipping.cost ||
     !shipping.address ||
     !shipping.address.city ||
     !shipping.address.pincode ||
@@ -86,6 +88,7 @@ exports.addOne = (req, res) => {
         return res.status(400).json({ error: "Out of stock products in order" });
 
       //Calculate total cost
+      shipping.cost += quantities.reduce((sum, qty) => sum + qty, 0) * 20; // 20 per item shipping cost
       const totalCost = shipping.cost + data.reduce((sum, item, index) => sum + item.price * quantities[index], 0);
 
       //Place order
