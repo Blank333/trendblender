@@ -22,7 +22,7 @@ exports.getCart = (req, res) => {
       select: "name price imageUrl stock",
     })
     .then((cart) => {
-      if (!cart) return res.status(400).json({ error: "No cart found" });
+      if (!cart) return res.status(404).json({ error: "No cart found" });
       return res.status(200).json({ message: cart });
     })
     .catch((err) => {

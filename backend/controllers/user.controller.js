@@ -1,7 +1,7 @@
 const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
-const { JWT_SECRET } = require("../config");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 // Authenticate user
 exports.authenticate = (req, res) => {
@@ -166,7 +166,7 @@ exports.login = (req, res) => {
         .compare(password, user.password)
         .then((compare) => {
           if (!compare) return res.status(401).json({ error: "Invalid credentials" });
-          const jwtToken = jwt.sign({ _id: user._id }, JWT_SECRET);
+          const jwtToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
           const userInfo = {
             firstname: user.firstname,
             lastname: user.lastname,

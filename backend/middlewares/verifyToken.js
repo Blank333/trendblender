@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("../config");
 const User = require("../models/user.model");
+require("dotenv").config();
 
 //Authenticate the user with the jwt token
 exports.verifyToken = (req, res, next) => {
@@ -8,7 +8,7 @@ exports.verifyToken = (req, res, next) => {
   if (!authorization) return res.status(401).json({ error: "Unauthorized" });
   const token = authorization.replace("bearer ", "");
 
-  jwt.verify(token, JWT_SECRET, (err, data) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, data) => {
     if (err) return res.status(401).json({ error: "Unauthorized" });
 
     const { _id } = data;
