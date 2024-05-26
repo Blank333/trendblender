@@ -3,7 +3,6 @@ import StyledHeading from "./StyledHeading";
 import StyledPagination from "./StyledPagination";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { API_URL } from "../../config";
 import StlyedLoading from "./StlyedLoading";
 import StyledModal from "./StyledModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -32,7 +31,7 @@ function ManageProducts() {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`${API_URL}/products?page=${page}&limit=${limit}&sort=${sort}`)
+      .get(`${import.meta.env.VITE_API_URL}/products?page=${page}&limit=${limit}&sort=${sort}`)
       .then((res) => {
         setProducts(res.data.message);
         setFilteredProducts(res.data.message);
@@ -47,7 +46,7 @@ function ManageProducts() {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/products/count`, {
+      .get(`${import.meta.env.VITE_API_URL}/products/count`, {
         headers: { Authorization: localStorage.getItem("token") },
       })
       .then((res) => {
@@ -61,7 +60,7 @@ function ManageProducts() {
   const handleDelete = (id) => {
     setDeleting(true);
     axios
-      .delete(`${API_URL}/products/${id}`, {
+      .delete(`${import.meta.env.VITE_API_URL}/products/${id}`, {
         headers: { Authorization: localStorage.getItem("token") },
       })
       .then((res) => {

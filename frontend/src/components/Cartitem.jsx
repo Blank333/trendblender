@@ -2,7 +2,6 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
-import { API_URL } from "../../config";
 import { useDispatch } from "react-redux";
 import { removeProduct, updateQuantity } from "../redux/slices/cartSlice";
 import StyledToast from "./StyledToast";
@@ -18,7 +17,7 @@ function CartItem({ product, quantity }) {
     const quantity = e.target.value;
     axios
       .put(
-        `${API_URL}/cart/${product._id}`,
+        `${import.meta.env.VITE_API_URL}/cart/${product._id}`,
         { quantity },
         {
           headers: { Authorization: `bearer ${localStorage.getItem("token")}` },
@@ -36,7 +35,7 @@ function CartItem({ product, quantity }) {
   // Remove product from cart
   const handleDelete = () => {
     axios
-      .delete(`${API_URL}/cart/${product._id}`, {
+      .delete(`${import.meta.env.VITE_API_URL}/cart/${product._id}`, {
         headers: { Authorization: `bearer ${localStorage.getItem("token")}` },
       })
       .then((res) => {

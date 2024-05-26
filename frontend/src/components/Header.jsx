@@ -7,7 +7,6 @@ import NavbarHeader from "./NavbarHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { API_URL } from "../../config";
 import { addUser, removeUser } from "../redux/slices/userSlice";
 import { initializeCart, clearCart } from "../redux/slices/cartSlice";
 import StyledModal from "./StyledModal";
@@ -32,7 +31,7 @@ function Header() {
     //If the user has the jwt token, get the user information and store in the redux store
     if (token && !userInfo.token) {
       axios
-        .get(`${API_URL}/users/auth`, { headers: { Authorization: token } })
+        .get(`${import.meta.env.VITE_API_URL}/users/auth`, { headers: { Authorization: token } })
         .then((res) => {
           const user = { ...res.data.message, token };
           dispatch(addUser(user));
@@ -43,7 +42,7 @@ function Header() {
 
       //Fetch the user's cart
       axios
-        .get(`${API_URL}/cart/me`, { headers: { Authorization: token } })
+        .get(`${import.meta.env.VITE_API_URL}/cart/me`, { headers: { Authorization: token } })
         .then((res) => {
           dispatch(initializeCart({ products: res.data.message.products }));
         })

@@ -3,7 +3,6 @@ import StyledHeading from "../components/StyledHeading";
 import CartItem from "../components/Cartitem.jsx";
 import { useSelector } from "react-redux";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
-import { PAYPAL_CLIENT } from "../../config.js";
 function Cart() {
   const cartInfo = useSelector((state) => state.cart);
   const totalPrice = cartInfo.products.reduce((sum, prod) => sum + prod.product.price * prod.quantity, 0);
@@ -11,7 +10,7 @@ function Cart() {
 
   // Paypal
   const initialOptions = {
-    "client-id": PAYPAL_CLIENT,
+    "client-id": import.meta.env.VITE_PAYPAL_CLIENT,
     currency: "USD",
     intent: "capture",
   };

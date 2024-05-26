@@ -4,7 +4,6 @@ import StlyedLoading from "./StlyedLoading";
 import { ButtonGroup, Form, InputGroup, ToggleButton } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { API_URL } from "../../config";
 
 function UserModal({ show, onHide, title = " ", user = false }) {
   const [isAdmin, setIsAdmin] = useState(user.isAdmin);
@@ -42,7 +41,7 @@ function UserModal({ show, onHide, title = " ", user = false }) {
     // Update Order
     axios
       .put(
-        `${API_URL}/users/${user._id}`,
+        `${import.meta.env.VITE_API_URL}/users/${user._id}`,
         { ...userInfo, isAdmin },
         {
           headers: { Authorization: localStorage.getItem("token") },

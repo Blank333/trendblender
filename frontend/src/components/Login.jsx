@@ -3,7 +3,6 @@ import StyledHeading from "./StyledHeading";
 import { Link } from "react-router-dom";
 import StyledModal from "./StyledModal";
 import axios from "axios";
-import { API_URL } from "../../config.js";
 import { useDispatch } from "react-redux";
 import { addUser } from "../redux/slices/userSlice.js";
 
@@ -43,7 +42,7 @@ function Login() {
     }
 
     axios
-      .post(`${API_URL}/users/login`, {
+      .post(`${import.meta.env.VITE_API_URL}/users/login`, {
         email: data.email,
         password: data.password,
       })

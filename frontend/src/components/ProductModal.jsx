@@ -4,7 +4,6 @@ import StlyedLoading from "./StlyedLoading";
 import { Form, InputGroup } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { API_URL } from "../../config";
 import { Link } from "react-router-dom";
 
 function ProductModal({ show, onHide, title = " ", product = false }) {
@@ -45,7 +44,7 @@ function ProductModal({ show, onHide, title = " ", product = false }) {
     if (product) {
       axios
         .put(
-          `${API_URL}/products/${product._id}`,
+          `${import.meta.env.VITE_API_URL}/products/${product._id}`,
           { ...productInfo },
           {
             headers: { Authorization: localStorage.getItem("token") },
@@ -67,14 +66,14 @@ function ProductModal({ show, onHide, title = " ", product = false }) {
       formData.append("image", image);
 
       axios
-        .post(`${API_URL}/products/upload`, formData, {
+        .post(`${import.meta.env.VITE_API_URL}/products/upload`, formData, {
           headers: { Authorization: localStorage.getItem("token") },
         })
         .then((res) => {
           //Create a new product in database
           axios
             .post(
-              `${API_URL}/products`,
+              `${import.meta.env.VITE_API_URL}/products`,
               { ...productInfo, imageUrl: res.data.url },
               {
                 headers: { Authorization: localStorage.getItem("token") },

@@ -3,7 +3,6 @@ import StyledHeading from "./StyledHeading";
 import StyledPagination from "./StyledPagination";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { API_URL } from "../../config";
 import StlyedLoading from "./StlyedLoading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -23,7 +22,7 @@ function ManageOrders() {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`${API_URL}/orders?page=${page}&limit=${limit}&sort=${sort}`, {
+      .get(`${import.meta.env.VITE_API_URL}/orders?page=${page}&limit=${limit}&sort=${sort}`, {
         headers: { Authorization: localStorage.getItem("token") },
       })
       .then((res) => {
@@ -40,7 +39,7 @@ function ManageOrders() {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/orders/count`, {
+      .get(`${import.meta.env.VITE_API_URL}/orders/count`, {
         headers: { Authorization: localStorage.getItem("token") },
       })
       .then((res) => {

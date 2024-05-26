@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
-import { API_URL } from "../../config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import StyledHeading from "./StyledHeading";
@@ -14,7 +13,7 @@ function AdminStatus() {
   useEffect(() => {
     //Fetch counts of all collections
     axios
-      .get(`${API_URL}/products/count`, {
+      .get(`${import.meta.env.VITE_API_URL}/products/count`, {
         headers: { Authorization: localStorage.getItem("token") },
       })
       .then((res) => {
@@ -24,7 +23,7 @@ function AdminStatus() {
         console.error(err);
       });
     axios
-      .get(`${API_URL}/orders/count`, {
+      .get(`${import.meta.env.VITE_API_URL}/orders/count`, {
         headers: { Authorization: localStorage.getItem("token") },
       })
       .then((res) => {
@@ -34,7 +33,7 @@ function AdminStatus() {
         console.error(err);
       });
     axios
-      .get(`${API_URL}/users/count`, {
+      .get(`${import.meta.env.VITE_API_URL}/users/count`, {
         headers: { Authorization: localStorage.getItem("token") },
       })
       .then((res) => {

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { API_URL } from "../../config";
 import Product from "../components/Product";
 import StyledHeading from "../components/StyledHeading";
 import { Row } from "react-bootstrap";
@@ -17,7 +16,7 @@ function Products() {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`${API_URL}/products?page=${page}&limit=${limit}&sort=-1`)
+      .get(`${import.meta.env.VITE_API_URL}/products?page=${page}&limit=${limit}&sort=-1`)
       .then((res) => {
         setProducts(res.data.message);
       })
@@ -30,7 +29,7 @@ function Products() {
   }, [page]);
 
   useEffect(() => {
-    axios.get(`${API_URL}/products/count`).then((res) => {
+    axios.get(`${import.meta.env.VITE_API_URL}/products/count`).then((res) => {
       setTotalProducts(res.data.message);
     });
   }, []);

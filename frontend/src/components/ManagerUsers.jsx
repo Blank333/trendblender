@@ -3,7 +3,6 @@ import StyledHeading from "./StyledHeading";
 import StyledPagination from "./StyledPagination";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { API_URL } from "../../config";
 import StlyedLoading from "./StlyedLoading";
 import StyledModal from "./StyledModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -28,7 +27,7 @@ function ManageUsers() {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`${API_URL}/users?page=${page}&limit=${limit}&sort=${sort}`, {
+      .get(`${import.meta.env.VITE_API_URL}/users?page=${page}&limit=${limit}&sort=${sort}`, {
         headers: { Authorization: localStorage.getItem("token") },
       })
       .then((res) => {
@@ -45,7 +44,7 @@ function ManageUsers() {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/users/count`, {
+      .get(`${import.meta.env.VITE_API_URL}/users/count`, {
         headers: { Authorization: localStorage.getItem("token") },
       })
       .then((res) => {
@@ -60,7 +59,7 @@ function ManageUsers() {
     setDeleting(true);
 
     axios
-      .delete(`${API_URL}/users/${id}`, {
+      .delete(`${import.meta.env.VITE_API_URL}/users/${id}`, {
         headers: { Authorization: localStorage.getItem("token") },
       })
       .then((res) => {

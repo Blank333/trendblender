@@ -3,7 +3,6 @@ import { Button, Col, Image, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import StlyedLoading from "../components/StlyedLoading";
 import axios from "axios";
-import { API_URL } from "../../config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import Rating from "../components/Rating";
@@ -26,7 +25,7 @@ function ProductDetails() {
     setLoading(true);
     // get Product information
     axios
-      .get(`${API_URL}/products/${id}`)
+      .get(`${import.meta.env.VITE_API_URL}/products/${id}`)
       .then((res) => {
         setProduct(res.data.message);
       })
@@ -39,7 +38,7 @@ function ProductDetails() {
 
     // Get reviews for product
     axios
-      .get(`${API_URL}/products/${id}/reviews`)
+      .get(`${import.meta.env.VITE_API_URL}/products/${id}/reviews`)
       .then((res) => {
         setReviews(res.data.message);
       })
@@ -51,7 +50,7 @@ function ProductDetails() {
   const addToCart = () => {
     axios
       .post(
-        `${API_URL}/cart`,
+        `${import.meta.env.VITE_API_URL}/cart`,
         { product: product._id },
         {
           headers: {

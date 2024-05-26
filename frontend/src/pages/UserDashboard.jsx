@@ -3,7 +3,6 @@ import StyledHeading from "../components/StyledHeading";
 import { Button, Container, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { API_URL } from "../../config";
 import StyledToast from "../components/StyledToast";
 import { updateUser } from "../redux/slices/userSlice";
 
@@ -28,7 +27,7 @@ function UserDashboard() {
     e.preventDefault();
 
     axios
-      .put(`${API_URL}/users/${userInfo._id}/profile`, formInfo, {
+      .put(`${import.meta.env.VITE_API_URL}/users/${userInfo._id}/profile`, formInfo, {
         headers: {
           Authorization: localStorage.getItem("token"),
         },

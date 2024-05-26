@@ -4,7 +4,6 @@ import StlyedLoading from "./StlyedLoading";
 import { Form, InputGroup } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { API_URL } from "../../config";
 
 function OrderModal({ show, onHide, title = " ", order = false }) {
   const [orderInfo, setOrderInfo] = useState({
@@ -37,7 +36,7 @@ function OrderModal({ show, onHide, title = " ", order = false }) {
     // Update Order
     axios
       .put(
-        `${API_URL}/orders/${order._id}`,
+        `${import.meta.env.VITE_API_URL}/orders/${order._id}`,
         { ...orderInfo },
         {
           headers: { Authorization: localStorage.getItem("token") },

@@ -4,7 +4,6 @@ import StlyedLoading from "./StlyedLoading";
 import { Form, InputGroup } from "react-bootstrap";
 import { useState } from "react";
 import axios from "axios";
-import { API_URL } from "../../config";
 import { Link } from "react-router-dom";
 
 function UploadModal({ show, onHide, title = " ", product = false }) {
@@ -22,14 +21,14 @@ function UploadModal({ show, onHide, title = " ", product = false }) {
 
     //Upload image to cloudinary
     axios
-      .post(`${API_URL}/products/upload`, formData, {
+      .post(`${import.meta.env.VITE_API_URL}/products/upload`, formData, {
         headers: { Authorization: localStorage.getItem("token") },
       })
       .then((res) => {
         //Change the url of the product image in database
         axios
           .put(
-            `${API_URL}/products/${product._id}`,
+            `${import.meta.env.VITE_API_URL}/products/${product._id}`,
             { imageUrl: res.data.url },
             {
               headers: { Authorization: localStorage.getItem("token") },

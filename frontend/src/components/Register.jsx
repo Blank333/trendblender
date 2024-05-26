@@ -3,7 +3,6 @@ import StyledHeading from "./StyledHeading";
 import { Link } from "react-router-dom";
 import StyledModal from "./StyledModal";
 import axios from "axios";
-import { API_URL } from "../../config.js";
 
 function Register() {
   const [show, setShow] = useState(false);
@@ -48,7 +47,7 @@ function Register() {
     }
 
     axios
-      .post(`${API_URL}/users/register`, {
+      .post(`${import.meta.env.VITE_API_URL}/users/register`, {
         firstname: data.firstname,
         lastname: data.lastname,
         email: data.email,

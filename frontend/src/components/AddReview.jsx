@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button, Collapse, Form } from "react-bootstrap";
 import axios from "axios";
-import { API_URL } from "../../config";
 import StyledToast from "./StyledToast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
@@ -23,7 +22,7 @@ function AddReview({ productId }) {
 
     axios
       .post(
-        `${API_URL}/products/${productId}/reviews`,
+        `${import.meta.env.VITE_API_URL}/products/${productId}/reviews`,
         { rating, comment },
         {
           headers: { Authorization: `bearer ${localStorage.getItem("token")}` },

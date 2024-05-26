@@ -4,7 +4,6 @@ import Rating from "./Rating";
 import { Button, Card, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { API_URL } from "../../config";
 import { useState } from "react";
 import noImage from "../assets/noImage.png";
 import StyledToast from "./StyledToast";
@@ -17,7 +16,7 @@ function Product({ product }) {
   const addToCart = () => {
     axios
       .post(
-        `${API_URL}/cart`,
+        `${import.meta.env.VITE_API_URL}/cart`,
         { product: product._id },
         {
           headers: {
