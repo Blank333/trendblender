@@ -1,4 +1,5 @@
 const Product = require("../models/product.model");
+const Review = require("../models/review.model");
 //For handling file upload
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
@@ -137,5 +138,68 @@ exports.uploadImage = (req, res) => {
       fs.unlink(image.path, (err) => {
         if (err) console.error(`Error deleting local file ${err}`);
       });
+    });
+};
+
+// Add review for product
+exports.addReview = (req, res) => {
+  const { rating, comment } = req.body;
+  const { user } = req;
+  const { id } = req.params;
+
+  if (!rating || !comment) return res.status(400).json({ error: "Please provide required fields" });
+
+  const newReview = new Review({
+    product: id,
+    user,
+    rating,
+    comment,
+  });
+
+  Product.findById({ _id: id })
+    .then((product) => {
+      if (!product) {
+        return res.status(400).json({ error: "Invalid product" });
+      }
+
+      newReview
+        .save()
+        .then(() => {
+          // Calculate new rating for product
+          const totalRating = product.averageRating * product.numberOfReviews + rating;
+          const newNumberOfReviews = product.numberOfReviews + 1;
+
+          product.averageRating = totalRating / newNumberOfReviews;
+          product.numberOfReviews = newNumberOfReviews;
+
+          product
+            .save()
+            .then(() => {
+              res.status(200).json({ message: "Review added!" });
+            })
+            .catch((err) => {
+              res.status(500).json({ error: `Server error ${err}` });
+            });
+        })
+        .catch((err) => {
+          res.status(500).json({ error: `Server error ${err}` });
+        });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: `Server error ${err}` });
+    });
+};
+
+// Get all product reviews
+exports.getProductReviews = async (req, res) => {
+  const { id } = req.params;
+
+  Review.find({ product: id })
+    .populate("user", "firstname lastname")
+    .then((reviews) => {
+      return res.status(200).json({ message: reviews });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: `Server error ${err}` });
     });
 };

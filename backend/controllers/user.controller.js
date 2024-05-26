@@ -72,7 +72,7 @@ exports.deleteOne = (req, res) => {
     });
 };
 
-//Update one user with ID
+//Update one user with ID (Admin)
 exports.updateOne = (req, res) => {
   const { firstname, lastname, email, isAdmin } = req.body;
   const { id } = req.params;
@@ -82,12 +82,35 @@ exports.updateOne = (req, res) => {
     email,
     isAdmin,
   };
+  if (!/\S+@\w+\.\w+(\.\w+)?/.test(email)) return res.status(400).json({ error: "Invalid email" });
 
   //Remove password from returned user
   User.findByIdAndUpdate(id, updateInfo, { projection: { password: 0 }, new: true, runValidators: true })
     .then((user) => {
       if (!user) return res.status(404).json({ error: "User not found" });
-      return res.status(200).json({ message: `User has been updated! (${user._id})` });
+      return res.status(200).json({ message: `Information updated!` });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: `Server Error ${err}` });
+    });
+};
+
+//Update one user with ID (Non-admin)
+exports.updateProfile = (req, res) => {
+  const { firstname, lastname, email } = req.body;
+  const { id } = req.params;
+  const updateInfo = {
+    firstname,
+    lastname,
+    email,
+  };
+  if (!/\S+@\w+\.\w+(\.\w+)?/.test(email)) return res.status(400).json({ error: "Invalid email" });
+
+  //Remove password from returned user
+  User.findByIdAndUpdate(id, updateInfo, { projection: { password: 0 }, new: true, runValidators: true })
+    .then((user) => {
+      if (!user) return res.status(404).json({ error: "User not found" });
+      return res.status(200).json({ message: `Information updated!` });
     })
     .catch((err) => {
       return res.status(500).json({ error: `Server Error ${err}` });

@@ -18,15 +18,17 @@ const productSchema = mongoose.Schema(
       type: String,
       default: "https://res.cloudinary.com/djpawrjb6/image/upload/v1716046148/noImage_csw7ti.png",
     },
-    rating: {
-      type: Number,
-      default: -1,
-      min: -1,
-      max: 5,
-    },
     stock: {
       type: Number,
       min: 0,
+      default: 0,
+    },
+    averageRating: {
+      type: Number,
+      default: 0,
+    },
+    numberOfReviews: {
+      type: Number,
       default: 0,
     },
   },

@@ -9,9 +9,12 @@ const upload = require("../middlewares/uploadFile");
 router.get("/", product.getAll);
 router.get("/count", product.getCount);
 router.get("/:id", product.getOne);
+router.get("/:id/reviews", product.getProductReviews);
 
 // Protected Routes
 router.use(verifyToken);
+router.post("/:id/reviews", product.addReview);
+
 // Authorized Routes
 router.use(verifyAdmin);
 

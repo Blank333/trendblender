@@ -14,12 +14,13 @@ router.use(verifyToken);
 router.get("/count", verifyAdmin, user.getCount); //Authorized Route
 router.get("/auth", user.authenticate);
 router.get("/:email", user.getOne);
+router.put("/:id/profile", user.updateProfile);
 
 // Authorized Routes
 router.use(verifyAdmin);
 
-router.get("/", user.getAll);
 router.put("/:id", user.updateOne);
+router.get("/", user.getAll);
 router.delete("/:id", user.deleteOne);
 
 module.exports = router;
