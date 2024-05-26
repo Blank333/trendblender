@@ -11,11 +11,29 @@ import { useState } from "react";
 function CartItem({ product, quantity }) {
   const dispatch = useDispatch();
 
-  const [toast, setToast] = useState("");
+  const [toast, setToast] = useState(false);
 
+  // Update quantity of product
   const handleQuantity = (e) => {
-    dispatch(updateQuantity({ product, quantity: e.target.value }));
+    const quantity = e.target.value;
+    axios
+      .put(
+        `${API_URL}/cart/${product._id}`,
+        { quantity },
+        {
+          headers: { Authorization: `bearer ${localStorage.getItem("token")}` },
+        }
+      )
+      .then((res) => {
+        setToast(res.data);
+        dispatch(updateQuantity({ product, quantity }));
+      })
+      .catch((err) => {
+        setToast(err.response.data);
+      });
   };
+
+  // Remove product from cart
   const handleDelete = () => {
     axios
       .delete(`${API_URL}/cart/${product._id}`, {
@@ -27,6 +45,7 @@ function CartItem({ product, quantity }) {
       })
       .catch((err) => {
         setToast(err.response.data);
+        console.error(err);
       });
   };
 
@@ -59,7 +78,7 @@ function CartItem({ product, quantity }) {
                   onChange={handleQuantity}
                 >
                   <option id='quantity'>QTY: {quantity}</option>
-                  {/* Options will be either 10 or less than 10 according to stock */}
+                  {/* Options will be either 9 or less than 9 according to stock */}
                   {Array.from(Array(Math.min(9, product.stock)).keys()).map((i) => (
                     <option key={i + 1} value={i + 1}>
                       {i + 1}
@@ -78,7 +97,7 @@ function CartItem({ product, quantity }) {
           </Row>
         </Card.Body>
       </Card>
-      <StyledToast toast={toast} onClose={() => setToast("")} />
+      <StyledToast toast={toast} onClose={() => setToast(false)} />
     </>
   );
 }

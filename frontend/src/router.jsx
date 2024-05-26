@@ -11,11 +11,16 @@ import AdminStatus from "./components/AdminStatus.jsx";
 import ManageOrders from "./components/ManageOrders.jsx";
 import ManageUsers from "./components/ManagerUsers.jsx";
 import Cart from "./pages/Cart.jsx";
+import UserDashboard from "./pages/UserDashboard.jsx";
+import ErrorPage from "./pages/ErrorPage.jsx";
+import UserOrders from "./pages/UserOrders.jsx";
 
 const router = createBrowserRouter([
+  // Main website
   {
     path: "/",
     element: <App />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "",
@@ -41,27 +46,44 @@ const router = createBrowserRouter([
         path: "cart",
         element: <Cart />,
       },
-    ],
-  },
-  {
-    path: "/admin",
-    element: <AdminPanel />,
-    children: [
+
+      // User Dashboard
       {
-        path: "",
-        element: <AdminStatus />,
+        path: "user",
+        children: [
+          {
+            path: "",
+            element: <UserDashboard />,
+          },
+          {
+            path: "orders",
+            element: <UserOrders />,
+          },
+        ],
       },
+
+      // Admin Dashboard
       {
-        path: "products",
-        element: <ManageProducts />,
-      },
-      {
-        path: "orders",
-        element: <ManageOrders />,
-      },
-      {
-        path: "users",
-        element: <ManageUsers />,
+        path: "admin",
+        element: <AdminPanel />,
+        children: [
+          {
+            path: "",
+            element: <AdminStatus />,
+          },
+          {
+            path: "products",
+            element: <ManageProducts />,
+          },
+          {
+            path: "orders",
+            element: <ManageOrders />,
+          },
+          {
+            path: "users",
+            element: <ManageUsers />,
+          },
+        ],
       },
     ],
   },

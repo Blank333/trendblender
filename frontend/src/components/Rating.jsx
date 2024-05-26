@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
 
-function Rating({ productRating }) {
+function Rating({ productRating, totalReviews = 0 }) {
   return (
     <>
       {/* Render as many solid stars as the product rating */}
@@ -15,6 +15,7 @@ function Rating({ productRating }) {
               icon={value <= productRating ? solidStar : regularStar}
             />
           ))}
+          {totalReviews > 0 && <p className='text-body-tertiary'> {totalReviews} reviews</p>}
         </div>
       )}
     </>

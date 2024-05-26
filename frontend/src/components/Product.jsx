@@ -11,7 +11,7 @@ import StyledToast from "./StyledToast";
 import { useDispatch } from "react-redux";
 import { addProduct } from "../redux/slices/cartSlice";
 function Product({ product }) {
-  const [toast, setToast] = useState("");
+  const [toast, setToast] = useState(false);
   const dispatch = useDispatch();
 
   const addToCart = () => {
@@ -54,7 +54,7 @@ function Product({ product }) {
               ₹{product.price}
             </Card.Text>
           </div>
-          <Rating productRating={product.rating} />
+          <Rating productRating={product.averageRating} totalReviews={product.numberOfReviews} />
 
           <Card.Text>
             {product.description.length > 100 ? product.description.slice(1, 100) + "..." : product.description}
@@ -66,13 +66,13 @@ function Product({ product }) {
             disabled={product.stock === 0}
             onClick={addToCart}
           >
-            <FontAwesomeIcon icon={faShoppingCart} />
+            <FontAwesomeIcon icon={faShoppingCart} className='me-2' />
             Add to cart
           </Button>
         </Card.Body>
       </Card>
 
-      <StyledToast toast={toast} onClose={() => setToast("")} />
+      <StyledToast toast={toast} onClose={() => setToast(false)} />
     </Col>
   );
 }

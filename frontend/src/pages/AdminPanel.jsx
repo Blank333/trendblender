@@ -1,7 +1,5 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import AdminSidePanel from "../components/AdminSidePanel";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
 import { Container } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -24,7 +22,6 @@ function AdminPanel() {
 
   return (
     <>
-      <Header />
       <main className='my-4'>
         {userInfo.isAdmin ? (
           <>
@@ -39,8 +36,6 @@ function AdminPanel() {
           </>
         )}
       </main>
-
-      <Footer />
     </>
   );
 }

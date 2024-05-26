@@ -23,13 +23,13 @@ function Header() {
   const handleLogout = () => {
     setShow(true);
     localStorage.removeItem("token");
-    localStorage.removeItem("userEmail");
     dispatch(removeUser());
     dispatch(clearCart());
   };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    //If the user has the jwt token, get the user information and store in the redux store
     if (token && !userInfo.token) {
       axios
         .get(`${API_URL}/users/auth`, { headers: { Authorization: token } })
@@ -40,13 +40,15 @@ function Header() {
         .catch((err) => {
           console.error(err);
         });
+
+      //Fetch the user's cart
       axios
         .get(`${API_URL}/cart/me`, { headers: { Authorization: token } })
         .then((res) => {
           dispatch(initializeCart({ products: res.data.message.products }));
         })
         .catch((err) => {
-          console.error(err);
+          if (err.response.status !== 404) console.error(err);
         });
     }
   }, []);
@@ -92,20 +94,28 @@ function Header() {
                   </NavLink>
                 </div>
 
-                {/* User profile */}
+                {/* User */}
                 <Dropdown>
                   <Dropdown.Toggle id='dropdown-basic' className='btn bg-custom text-light hover-color-custom'>
                     {userInfo.firstname}
                   </Dropdown.Toggle>
                   <Dropdown.Menu className='bg-success-subtle '>
+                    {/* Admin Panel */}
                     {userInfo.isAdmin && (
                       <NavLink className='link-custom-unstyled' to='/admin'>
                         <Dropdown.ItemText className='hover-color-custom'>Admin Panel</Dropdown.ItemText>
                       </NavLink>
                     )}
-                    <Dropdown.ItemText className='hover-color-custom'>Orders</Dropdown.ItemText>
-                    <Dropdown.ItemText className='hover-color-custom'>Profile</Dropdown.ItemText>
+                    {/* Orders */}
+                    <NavLink className='link-custom-unstyled' to='/user/orders'>
+                      <Dropdown.ItemText className='hover-color-custom'>Orders</Dropdown.ItemText>
+                    </NavLink>
+                    {/* Profile */}
+                    <NavLink className='link-custom-unstyled' to='/user'>
+                      <Dropdown.ItemText className='hover-color-custom'>Profile</Dropdown.ItemText>
+                    </NavLink>
 
+                    {/* Logout */}
                     <NavLink className='link-custom-unstyled' to='/' onClick={handleLogout}>
                       <Dropdown.ItemText className='hover-color-custom'>Logout</Dropdown.ItemText>
                     </NavLink>
