@@ -3,7 +3,7 @@ import StyledHeading from "./StyledHeading";
 import StyledPagination from "./StyledPagination";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import StlyedLoading from "./StlyedLoading";
+import StyledLoading from "./StyledLoading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faSearch } from "@fortawesome/free-solid-svg-icons";
 import OrderModal from "./OrderModal";
@@ -19,6 +19,7 @@ function ManageOrders() {
 
   const [edit, setEdit] = useState(false);
 
+  // Get all orders
   useEffect(() => {
     setLoading(true);
     axios
@@ -37,6 +38,7 @@ function ManageOrders() {
       });
   }, [page]);
 
+  // Get total order count
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_URL}/orders/count`, {
@@ -70,7 +72,7 @@ function ManageOrders() {
       <StyledHeading heading='Manage Orders' custom='bg-danger-subtle' />
       {loading ? (
         <div>
-          <StlyedLoading anim='grow' size='sm' />
+          <StyledLoading anim='grow' size='sm' />
         </div>
       ) : (
         <>
@@ -101,7 +103,9 @@ function ManageOrders() {
             <tbody>
               {filteredOrders.map((order, index) => (
                 <tr key={order._id}>
-                  <td>{index + 1 + (page - 1) * limit}</td>
+                  <td>
+                    {index + 1 + (page - 1) * limit} {order._id}
+                  </td>
                   <td>
                     {order.user.firstname} {order.user.lastname}
                   </td>

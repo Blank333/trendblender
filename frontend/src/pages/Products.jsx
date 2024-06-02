@@ -4,7 +4,7 @@ import Product from "../components/Product";
 import StyledHeading from "../components/StyledHeading";
 import { Row } from "react-bootstrap";
 import StyledPagination from "../components/StyledPagination";
-import StlyedLoading from "../components/StlyedLoading";
+import StyledLoading from "../components/StyledLoading";
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -38,7 +38,7 @@ function Products() {
       <StyledHeading heading='Products' />
       <div className='justify-content-center d-flex'>
         {loading ? (
-          <StlyedLoading anim='grow' size='sm' />
+          <StyledLoading anim='grow' size='sm' />
         ) : (
           <div className='d-flex flex-column align-items-center gap-3'>
             <Row className='row-gap-3 justify-content-md-start justify-content-center'>

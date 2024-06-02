@@ -3,7 +3,7 @@ import StyledHeading from "./StyledHeading";
 import StyledPagination from "./StyledPagination";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import StlyedLoading from "./StlyedLoading";
+import StyledLoading from "./StyledLoading";
 import StyledModal from "./StyledModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faLink, faPenToSquare, faPlus, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -94,7 +94,7 @@ function ManageProducts() {
       <StyledHeading heading='Manage Products' custom='bg-danger-subtle' />
       {loading ? (
         <div>
-          <StlyedLoading anim='grow' size='sm' />
+          <StyledLoading anim='grow' size='sm' />
         </div>
       ) : (
         <>

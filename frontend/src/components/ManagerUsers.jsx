@@ -3,7 +3,7 @@ import StyledHeading from "./StyledHeading";
 import StyledPagination from "./StyledPagination";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import StlyedLoading from "./StlyedLoading";
+import StyledLoading from "./StyledLoading";
 import StyledModal from "./StyledModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faPenToSquare, faSearch, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -93,7 +93,7 @@ function ManageUsers() {
       <StyledHeading heading='Manage Users' custom='bg-danger-subtle' />
       {loading ? (
         <div>
-          <StlyedLoading anim='grow' size='sm' />
+          <StyledLoading anim='grow' size='sm' />
         </div>
       ) : (
         <>

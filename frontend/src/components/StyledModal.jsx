@@ -1,6 +1,6 @@
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import StlyedLoading from "./StlyedLoading";
+import StyledLoading from "./StyledLoading";
 
 function StyledModal({ show, onHide, title, body, loading, onOK = onHide }) {
   return (
@@ -8,7 +8,7 @@ function StyledModal({ show, onHide, title, body, loading, onOK = onHide }) {
       <Modal show={show} onHide={onHide} centered>
         {loading && (
           <Modal.Title className='d-flex justify-content-center py-3 gap-1'>
-            <StlyedLoading anim='grow' size='sm' />
+            <StyledLoading anim='grow' size='sm' />
           </Modal.Title>
         )}
         {title && (

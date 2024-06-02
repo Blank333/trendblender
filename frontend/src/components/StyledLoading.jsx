@@ -1,6 +1,6 @@
 import { Spinner } from "react-bootstrap";
 
-function StlyedLoading({ anim, size }) {
+function StyledLoading({ anim = "grow", size = "sm" }) {
   return (
     <>
       <Spinner animation={anim} size={size} role='status'>
@@ -13,4 +13,4 @@ function StlyedLoading({ anim, size }) {
   );
 }
 
-export default StlyedLoading;
+export default StyledLoading;

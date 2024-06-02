@@ -1,6 +1,6 @@
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import StlyedLoading from "./StlyedLoading";
+import StyledLoading from "./StyledLoading";
 import { Form, InputGroup } from "react-bootstrap";
 import { useState } from "react";
 import axios from "axios";
@@ -103,7 +103,7 @@ function UploadModal({ show, onHide, title = " ", product = false }) {
 
         {load && (
           <Modal.Title className='d-flex justify-content-center py-3 gap-1'>
-            <StlyedLoading anim='grow' size='sm' />
+            <StyledLoading anim='grow' size='sm' />
           </Modal.Title>
         )}
         {result && <p className='text-center'>{result}</p>}

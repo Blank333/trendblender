@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Image, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import StlyedLoading from "../components/StlyedLoading";
+import StyledLoading from "../components/StyledLoading";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
@@ -70,7 +70,7 @@ function ProductDetails() {
     <>
       {loading ? (
         <div className='justify-content-center d-flex'>
-          <StlyedLoading anim='grow' size='sm' />
+          <StyledLoading anim='grow' size='sm' />
         </div>
       ) : (
         <Row className='p-3 gap-3 justify-content-between'>
