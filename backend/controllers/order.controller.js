@@ -5,13 +5,26 @@ const mongoose = require("mongoose");
 
 // Total orders
 exports.getCount = (req, res) => {
-  Order.countDocuments()
-    .then((data) => {
-      return res.status(200).json({ message: data });
-    })
-    .catch((err) => {
-      return res.status(500).json({ error: `Server Error ${err}` });
-    });
+  const route = req.route.path;
+  const { user } = req;
+
+  if (route === "/count") {
+    Order.countDocuments()
+      .then((data) => {
+        return res.status(200).json({ message: data });
+      })
+      .catch((err) => {
+        return res.status(500).json({ error: `Server Error ${err}` });
+      });
+  } else {
+    Order.countDocuments({ user: user })
+      .then((data) => {
+        return res.status(200).json({ message: data });
+      })
+      .catch((err) => {
+        return res.status(500).json({ error: `Server Error ${err}` });
+      });
+  }
 };
 
 //Get all orders
@@ -20,43 +33,54 @@ exports.getAll = (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 12;
   const sort = parseInt(req.query.sort) || 1;
+  const route = req.route.path;
+  const { user } = req;
 
   if (page <= 0 || limit <= 0) {
     return res.status(400).json({ error: "Invalid request" });
   }
 
-  //Sorting by date and populating the user and products fields
-  Order.find()
-    .sort({ createdAt: sort })
-    .skip((page - 1) * limit)
-    .limit(limit)
-    .populate("user", "firstname lastname email")
-    .populate({
-      path: "products._id",
-      model: "Product",
-      select: "name",
-    })
-    .then((data) => {
-      return res.status(200).json({ message: data });
-    })
-    .catch((err) => {
-      return res.status(500).json({ error: `Server Error ${err}` });
-    });
-};
-
-//Get all orders of a user
-exports.getAllByUser = (req, res) => {
-  const { id } = req.params;
-  Order.find({ user: id })
-    .then((data) => res.status(200).json(data))
-    .catch((err) => {
-      return res.status(500).json({ error: `Server Error ${err}` });
-    });
+  if (route === "/") {
+    //Sorting by date and populating the user and products fields
+    Order.find()
+      .sort({ createdAt: sort })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate("user", "firstname lastname email")
+      .populate({
+        path: "products._id",
+        model: "Product",
+        select: "name",
+      })
+      .then((data) => {
+        return res.status(200).json({ message: data });
+      })
+      .catch((err) => {
+        return res.status(500).json({ error: `Server Error ${err}` });
+      });
+  } else {
+    Order.find({ user: user })
+      .sort({ createdAt: sort })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate("user", "firstname lastname email")
+      .populate({
+        path: "products._id",
+        model: "Product",
+        select: "name",
+      })
+      .then((data) => {
+        return res.status(200).json({ message: data });
+      })
+      .catch((err) => {
+        return res.status(500).json({ error: `Server Error ${err}` });
+      });
+  }
 };
 
 //Add new order
 exports.addOne = (req, res) => {
-  const { shipping, payment, clientNotes, products } = req.body;
+  const { shipping, payment, paymentID, products } = req.body;
   const { user } = req;
 
   //Base shipping cost
@@ -67,7 +91,6 @@ exports.addOne = (req, res) => {
     products.length === 0 ||
     !payment ||
     !shipping ||
-    !shipping.address ||
     !shipping.address.city ||
     !shipping.address.pincode ||
     !shipping.address.state ||
@@ -77,7 +100,7 @@ exports.addOne = (req, res) => {
 
   const totalCost = 0;
 
-  const productIds = products.map((product) => product._id);
+  const productIds = products.map((product) => product.product._id);
   const quantities = products.map((product) => product.quantity);
 
   //Check for valid products
@@ -95,8 +118,8 @@ exports.addOne = (req, res) => {
       const newOrder = new Order({
         shipping,
         payment,
+        paymentID,
         totalCost,
-        clientNotes,
         products,
         user,
       });
@@ -105,7 +128,7 @@ exports.addOne = (req, res) => {
         .save()
         .then((data) => {
           if (!data) return res.status(400).json({ error: "Something went wrong!" });
-          return res.status(200).json({ message: `Order placed successfuly! (${data._id})` });
+          return res.status(200).json({ message: data._id });
         })
         .catch((err) => {
           return res.status(500).json({ error: `Server error ${err}` });
@@ -120,17 +143,32 @@ exports.addOne = (req, res) => {
 exports.updateOne = (req, res) => {
   const { status, deliveryDate } = req.body;
   const { id } = req.params;
+  const route = req.route.path;
 
-  const updatedInfo = {
-    status,
-    deliveryDate,
-  };
-  Order.findByIdAndUpdate(id, updatedInfo, { new: true, runValidators: true })
-    .then((data) => {
-      if (!data) return res.status(400).json({ error: "Something went wrong!" });
-      return res.status(200).json({ message: `Updated product successfuly! (${data._id})` });
-    })
-    .catch((err) => {
-      return res.status(500).json({ error: `Server error ${err}` });
-    });
+  if (route.includes === "/user") {
+    const updatedInfo = {
+      status,
+    };
+    Order.findByIdAndUpdate(id, updatedInfo, { new: true, runValidators: true })
+      .then((data) => {
+        if (!data) return res.status(400).json({ error: "Something went wrong!" });
+        return res.status(200).json({ message: `Updated product successfuly! (${data._id})` });
+      })
+      .catch((err) => {
+        return res.status(500).json({ error: `Server error ${err}` });
+      });
+  } else {
+    const updatedInfo = {
+      status,
+      deliveryDate,
+    };
+    Order.findByIdAndUpdate(id, updatedInfo, { new: true, runValidators: true })
+      .then((data) => {
+        if (!data) return res.status(400).json({ error: "Something went wrong!" });
+        return res.status(200).json({ message: `Updated product successfuly! (${data._id})` });
+      })
+      .catch((err) => {
+        return res.status(500).json({ error: `Server error ${err}` });
+      });
+  }
 };

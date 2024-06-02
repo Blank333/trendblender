@@ -59,12 +59,13 @@ const orderSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    paymentID: {
+      type: String,
+      required: true,
+    },
     totalCost: {
       type: Number,
       required: true,
-    },
-    clientNotes: {
-      type: String,
     },
     deliveryDate: {
       type: Date,

@@ -8,13 +8,15 @@ const { verifyAdmin } = require("../middlewares/verifyAdmin");
 router.use(verifyToken);
 router.get("/count", verifyAdmin, order.getCount); //Authorized Route
 
-router.get("/:id", order.getAllByUser);
+router.get("/user", order.getAll);
+router.get("/user/count", order.getCount);
+router.put("/user/:id", order.updateOne);
+router.post("/", order.addOne);
 
 // Authorized Routes
 router.use(verifyAdmin);
 
 router.get("/", order.getAll);
-router.post("/", order.addOne);
 router.put("/:id", order.updateOne);
 
 module.exports = router;
