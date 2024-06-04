@@ -15,6 +15,7 @@ import UserDashboard from "./pages/UserDashboard.jsx";
 import ErrorPage from "./pages/ErrorPage.jsx";
 import UserOrders from "./pages/UserOrders.jsx";
 import Checkout from "./components/Checkout.jsx";
+import OrderDetails from "./components/OrderDetails.jsx";
 
 const router = createBrowserRouter([
   // Main website
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: "checkout",
         element: <Checkout />,
+      },
+      {
+        path: "order/:id",
+        element: <OrderDetails />,
       },
 
       // User Dashboard

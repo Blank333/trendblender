@@ -78,6 +78,29 @@ exports.getAll = (req, res) => {
   }
 };
 
+//Get One order
+exports.getOne = (req, res) => {
+  const { user } = req;
+  const { id } = req.params;
+
+  Order.findById(id)
+    .populate("user", "firstname lastname email")
+    .populate({
+      path: "products._id",
+      model: "Product",
+      select: "name price description imageUrl averageRating",
+    })
+    .then((data) => {
+      if (!data) return res.status(404).json({ message: "Order Not found" });
+
+      if (!(data.user._id.equals(user._id) || user.isAdmin)) return res.status(401).json({ error: "Unauthorized!" });
+      return res.status(200).json({ message: data });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: `Server Error ${err}` });
+    });
+};
+
 //Add new order
 exports.addOne = (req, res) => {
   const { shipping, payment, paymentID, products } = req.body;
@@ -115,12 +138,18 @@ exports.addOne = (req, res) => {
       const totalCost = shipping.cost + data.reduce((sum, item, index) => sum + item.price * quantities[index], 0);
 
       //Place order
+      const productsInfo = products.map((product) => {
+        return {
+          _id: product.product._id,
+          quantity: product.quantity,
+        };
+      });
       const newOrder = new Order({
         shipping,
         payment,
         paymentID,
         totalCost,
-        products,
+        products: productsInfo,
         user,
       });
 
@@ -128,7 +157,23 @@ exports.addOne = (req, res) => {
         .save()
         .then((data) => {
           if (!data) return res.status(400).json({ error: "Something went wrong!" });
-          return res.status(200).json({ message: data._id });
+
+          // Reduce product stock
+          const updateStock = products.map((product) => {
+            return Product.findByIdAndUpdate(
+              product.product._id,
+              { $inc: { stock: -product.quantity } },
+              { new: true }
+            ).exec();
+          });
+
+          Promise.all(updateStock)
+            .then(() => {
+              return res.status(200).json({ message: data._id });
+            })
+            .catch((err) => {
+              return res.status(500).json({ error: `Server error ${err}` });
+            });
         })
         .catch((err) => {
           return res.status(500).json({ error: `Server error ${err}` });
@@ -144,6 +189,7 @@ exports.updateOne = (req, res) => {
   const { status, deliveryDate } = req.body;
   const { id } = req.params;
   const route = req.route.path;
+  const { user } = req;
 
   if (route.includes === "/user") {
     const updatedInfo = {
@@ -152,6 +198,7 @@ exports.updateOne = (req, res) => {
     Order.findByIdAndUpdate(id, updatedInfo, { new: true, runValidators: true })
       .then((data) => {
         if (!data) return res.status(400).json({ error: "Something went wrong!" });
+        if (!(data.user._id.equals(user._id) || user.isAdmin)) return res.status(401).json({ error: "Unauthorized!" });
         return res.status(200).json({ message: `Updated product successfuly! (${data._id})` });
       })
       .catch((err) => {

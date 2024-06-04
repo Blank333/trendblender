@@ -6,6 +6,7 @@ import StyledPagination from "../components/StyledPagination";
 import { useEffect, useState } from "react";
 import StyledLoading from "../components/StyledLoading";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function UserOrders() {
   const token = localStorage.getItem("token");
@@ -99,6 +100,7 @@ function UserOrders() {
                     <th>Total Cost (Payment Mode)</th>
                     <th>Delivery Date</th>
                     <th>Status</th>
+                    <th>Details</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -118,6 +120,9 @@ function UserOrders() {
                       </td>
                       <td>{new Date(order.deliveryDate).toLocaleDateString()}</td>
                       <td>{order.status}</td>
+                      <td>
+                        <Link to={`/order/${order._id}`}>Details</Link>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
