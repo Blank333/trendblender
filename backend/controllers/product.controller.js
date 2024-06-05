@@ -6,11 +6,15 @@ const fs = require("fs");
 
 // Total items
 exports.getCount = (req, res) => {
-  // Check the filtered products only
-  let filter = req.query.filter.split(" ");
+  // Check the filtered products
+  let filter = req.query.filter;
+  let search = req.query.search;
+  const regex = new RegExp(search, "i");
 
   let query = {};
-  if (filter != "null" && filter.length) {
+  query.name = { $regex: regex };
+  if (filter && filter != "null" && filter != undefined) {
+    filter = filter.split(" ");
     query.tags = { $in: filter };
   }
 
@@ -30,18 +34,23 @@ exports.getAll = (req, res) => {
   const limit = parseInt(req.query.limit) || 12;
   const sort = parseInt(req.query.sort) || 1;
 
-  // Check the filtered products only if any
-  let filter = req.query.filter.split(" ");
+  // Check the filtered products
+  let filter = req.query.filter;
+  let search = req.query.search;
+  const regex = new RegExp(search, "i");
 
   if (page <= 0 || limit <= 0) {
     return res.status(400).json({ error: "Invalid request" });
   }
 
   let query = {};
-  if (filter != "null" && filter.length) {
+  query.name = { $regex: regex };
+  if (filter && filter != "null" && filter != undefined) {
+    filter = filter.split(" ");
     query.tags = { $in: filter };
   }
-  //Sorting by date
+
+  //Sorting and filtering
   Product.find(query)
     .sort({ createdAt: sort })
     .skip((page - 1) * limit)

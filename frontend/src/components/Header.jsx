@@ -18,6 +18,7 @@ function Header() {
   const dispatch = useDispatch();
 
   const [show, setShow] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleLogout = () => {
     setShow(true);
@@ -52,6 +53,18 @@ function Header() {
     }
   }, []);
 
+  const handleChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearch = (e) => {
+    const { key, type } = e;
+
+    // Continue if user pressed enter on the input or clicked the search button
+    if (key === "Enter" || type === "click") {
+      window.location.href = `/search?search=${searchTerm.split(" ").join("+")}`;
+    }
+  };
   return (
     <>
       <header className='bg-custom-main'>
@@ -65,8 +78,10 @@ function Header() {
               type='search'
               className='w-100 border border-info rounded ps-3 p-2 search-box-custom'
               placeholder='Search...'
+              onKeyDown={handleSearch}
+              onChange={handleChange}
             />
-            <button className='search-btn-custom btn'>
+            <button className='search-btn-custom btn' onClick={handleSearch}>
               <FontAwesomeIcon icon={faMagnifyingGlass} />
             </button>
           </div>

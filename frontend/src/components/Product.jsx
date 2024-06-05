@@ -50,7 +50,7 @@ function Product({ product }) {
           {product.stock === 0 && (
             <>
               <div
-                className='position-absolute bg-danger-subtle p-3 text-success-emphasis rounded-end'
+                className='position-absolute bg-danger-subtle  px-3 py-1 text-success-emphasis rounded-end'
                 style={{ top: "20px" }}
               >
                 Out of Stock!
