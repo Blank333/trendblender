@@ -6,7 +6,15 @@ const fs = require("fs");
 
 // Total items
 exports.getCount = (req, res) => {
-  Product.countDocuments()
+  // Check the filtered products only
+  let filter = req.query.filter.split(" ");
+
+  let query = {};
+  if (filter != "null" && filter.length) {
+    query.tags = { $in: filter };
+  }
+
+  Product.countDocuments(query)
     .then((data) => {
       return res.status(200).json({ message: data });
     })
@@ -22,15 +30,33 @@ exports.getAll = (req, res) => {
   const limit = parseInt(req.query.limit) || 12;
   const sort = parseInt(req.query.sort) || 1;
 
+  // Check the filtered products only if any
+  let filter = req.query.filter.split(" ");
+
   if (page <= 0 || limit <= 0) {
     return res.status(400).json({ error: "Invalid request" });
   }
 
+  let query = {};
+  if (filter != "null" && filter.length) {
+    query.tags = { $in: filter };
+  }
   //Sorting by date
-  Product.find()
+  Product.find(query)
     .sort({ createdAt: sort })
     .skip((page - 1) * limit)
     .limit(limit)
+    .then((data) => {
+      return res.status(200).json({ message: data });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: `Server Error ${err}` });
+    });
+};
+
+//Get featured products
+exports.getFeatured = (req, res) => {
+  Product.find({ isFeatured: true })
     .then((data) => {
       return res.status(200).json({ message: data });
     })
@@ -55,7 +81,7 @@ exports.getOne = (req, res) => {
 
 //Add new product
 exports.addOne = (req, res) => {
-  const { name, price, description, imageUrl, stock } = req.body;
+  const { name, price, description, imageUrl, stock, tags, isFeatured } = req.body;
   if (!name || !price || !description) return res.status(400).json({ error: "Please provide required fields" });
 
   const newProduct = new Product({
@@ -64,6 +90,8 @@ exports.addOne = (req, res) => {
     description,
     imageUrl,
     stock,
+    tags,
+    isFeatured,
   });
 
   newProduct
@@ -79,7 +107,7 @@ exports.addOne = (req, res) => {
 
 //Update one product with ID
 exports.updateOne = (req, res) => {
-  const { name, price, description, imageUrl, stock } = req.body;
+  const { name, price, description, imageUrl, stock, tags, isFeatured } = req.body;
   const { id } = req.params;
 
   const updatedInfo = {
@@ -88,6 +116,8 @@ exports.updateOne = (req, res) => {
     description,
     imageUrl,
     stock,
+    tags,
+    isFeatured,
   };
 
   Product.findByIdAndUpdate(id, updatedInfo, { new: true, runValidators: true })

@@ -7,6 +7,7 @@ const upload = require("../middlewares/uploadFile");
 
 // Normal Routes
 router.get("/", product.getAll);
+router.get("/featured", product.getFeatured);
 router.get("/count", product.getCount);
 router.get("/:id", product.getOne);
 router.get("/:id/reviews", product.getProductReviews);
