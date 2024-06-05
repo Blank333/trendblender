@@ -145,7 +145,7 @@ function Checkout() {
           <StyledLoading />
         </div>
       ) : (
-        <Container>
+        <Container className=''>
           <Row className='text-center h3'>
             <Col className={`p-2 ` + (steps >= 1 ? "text-success" : "text-body-tertiary")}>Shipping</Col>
             <Col className={`p-2 ` + (steps >= 2 ? "text-success" : "text-body-tertiary")}>Order</Col>
@@ -158,7 +158,7 @@ function Checkout() {
           </Row>
 
           <Tab.Container id='tab' defaultActiveKey={currentTab} activeKey={currentTab}>
-            <Tab.Content>
+            <Tab.Content className='bg-white p-4 rounded shadow'>
               <Tab.Pane eventKey='shipping'>
                 <Container className='w-75'>
                   <h4>Shipping Address</h4>

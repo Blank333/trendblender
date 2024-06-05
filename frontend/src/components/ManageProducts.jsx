@@ -99,14 +99,14 @@ function ManageProducts() {
   };
 
   return (
-    <div className='d-flex flex-column gap-2 align-items-center'>
+    <div>
       <StyledHeading heading='Manage Products' custom='bg-danger-subtle' />
       {loading ? (
         <div>
           <StyledLoading anim='grow' size='sm' />
         </div>
       ) : (
-        <>
+        <div className='bg-white p-4 rounded shadow d-flex flex-column gap-2 align-items-center'>
           <div className='d-flex justify-content-between align-items-center w-100'>
             {/* Product Creation */}
             <Button
@@ -127,7 +127,7 @@ function ManageProducts() {
           </div>
 
           {/* All products */}
-          <Table striped bordered responsive='md'>
+          <Table striped bordered>
             <thead>
               <tr>
                 <th>S. No.</th>
@@ -219,7 +219,7 @@ function ManageProducts() {
           <UploadModal product={upload} show={upload} onHide={() => setUpload(false)} title='Update product image ' />
 
           <StyledPagination page={page} setPage={setPage} lastPage={Math.ceil(totalProducts / limit)} />
-        </>
+        </div>
       )}
     </div>
   );

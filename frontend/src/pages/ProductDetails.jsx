@@ -48,6 +48,8 @@ function ProductDetails() {
   }, []);
 
   const addToCart = () => {
+    if (!localStorage.getItem("token")) return (window.location.href = "/login");
+
     axios
       .post(
         `${import.meta.env.VITE_API_URL}/cart`,
@@ -67,7 +69,7 @@ function ProductDetails() {
       });
   };
   return (
-    <>
+    <div className='bg-white p-4 rounded shadow'>
       {loading ? (
         <div className='justify-content-center d-flex'>
           <StyledLoading anim='grow' size='sm' />
@@ -155,7 +157,7 @@ function ProductDetails() {
           <StyledToast toast={toast} onClose={() => setToast("")} />
         </Row>
       )}
-    </>
+    </div>
   );
 }
 

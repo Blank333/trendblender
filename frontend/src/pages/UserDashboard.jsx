@@ -55,7 +55,7 @@ function UserDashboard() {
       {token ? (
         <Container>
           <StyledHeading heading='User Dashboard' />
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit} className='bg-white p-4 rounded shadow'>
             <Form.Group className='mb-3'>
               <Form.Label>Email address</Form.Label>
               <Form.Control id='email' value={formInfo.email} type='email' onChange={handleChange} />

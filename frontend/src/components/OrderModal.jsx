@@ -101,7 +101,7 @@ function OrderModal({ show, onHide, title = " ", order = false }) {
           </Modal.Body>
           <Modal.Footer className='d-flex justify-content-start '>
             <Button className='bg-success-subtle hover-color-custom text-black border-0' type='submit'>
-              {order ? "Update Product" : "Add Product"}
+              {order ? "Update Order" : "Add Order"}
             </Button>
           </Modal.Footer>
         </Form>

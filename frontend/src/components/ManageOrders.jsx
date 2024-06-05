@@ -74,14 +74,14 @@ function ManageOrders() {
   };
 
   return (
-    <div className='d-flex flex-column gap-2 align-items-center'>
+    <div>
       <StyledHeading heading='Manage Orders' custom='bg-danger-subtle' />
       {loading ? (
         <div>
           <StyledLoading anim='grow' size='sm' />
         </div>
       ) : (
-        <>
+        <div className='bg-white p-4 rounded shadow d-flex flex-column gap-2 align-items-center'>
           <div className='d-flex justify-content-end align-items-center w-100'>
             {/* Search */}
             <InputGroup className='mb-3 w-25'>
@@ -93,7 +93,7 @@ function ManageOrders() {
           </div>
 
           {/* All orders */}
-          <Table striped bordered responsive='md'>
+          <Table striped bordered>
             <thead>
               <tr>
                 <th>S. No.</th>
@@ -109,9 +109,7 @@ function ManageOrders() {
             <tbody>
               {filteredOrders.map((order, index) => (
                 <tr key={order._id}>
-                  <td>
-                    {index + 1 + (page - 1) * limit} {order._id}
-                  </td>
+                  <td>{index + 1 + (page - 1) * limit}</td>
                   <td>
                     {order.user.firstname} {order.user.lastname}
                   </td>
@@ -126,7 +124,7 @@ function ManageOrders() {
                   <td>{new Date(order.deliveryDate).toLocaleDateString()}</td>
                   <td>{order.status}</td>
 
-                  <td className='d-flex gap-2 align-items-center justify-content-center'>
+                  <td className='d-flex gap-2 align-items-center justify-content-center '>
                     {/* Update order */}
                     {/* Cannot update cancelled orders */}
                     <Button
@@ -156,7 +154,7 @@ function ManageOrders() {
           <OrderModal order={edit} show={edit} onHide={() => setEdit(false)} title='Update order' />
 
           <StyledPagination page={page} setPage={setPage} lastPage={Math.ceil(totalOrders / limit)} />
-        </>
+        </div>
       )}
     </div>
   );

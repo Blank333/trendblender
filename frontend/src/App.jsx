@@ -15,7 +15,7 @@ function App() {
   };
 
   return (
-    <>
+    <div className='bg-image-custom'>
       <Header />
       {/* No styles for the homepage */}
       <main className={route.pathname === "/" ? "" : "container my-4"}>
@@ -24,7 +24,7 @@ function App() {
         </PayPalScriptProvider>
       </main>
       <Footer />
-    </>
+    </div>
   );
 }
 

@@ -14,6 +14,8 @@ function Product({ product }) {
   const dispatch = useDispatch();
 
   const addToCart = () => {
+    if (!localStorage.getItem("token")) return (window.location.href = "/login");
+
     axios
       .post(
         `${import.meta.env.VITE_API_URL}/cart`,

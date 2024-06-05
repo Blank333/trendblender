@@ -39,7 +39,7 @@ function OrderDetails() {
           <StyledLoading />
         </div>
       ) : (
-        <>
+        <div className='bg-white p-4 rounded shadow'>
           <Row>
             <Col md={6}>
               <h2>Order Details</h2>
@@ -79,7 +79,7 @@ function OrderDetails() {
               ))}
             </div>
           </Row>
-        </>
+        </div>
       )}
     </div>
   );

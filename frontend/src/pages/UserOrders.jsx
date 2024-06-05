@@ -73,17 +73,15 @@ function UserOrders() {
   };
 
   return (
-    <Container className='d-flex flex-column gap-2 align-items-center'>
+    <Container>
       {token ? (
         <>
           <StyledHeading heading='Orders' />
 
           {loading ? (
-            <div>
-              <StyledLoading anim='grow' size='sm' />
-            </div>
+            <StyledLoading anim='grow' size='sm' />
           ) : (
-            <>
+            <div className='bg-white p-4 rounded shadow d-flex flex-column gap-2 align-items-center'>
               <div className='d-flex justify-content-end align-items-center w-100'>
                 {/* Search */}
                 <InputGroup className='mb-3 w-25'>
@@ -95,7 +93,7 @@ function UserOrders() {
               </div>
 
               {/* All orders */}
-              <Table striped bordered responsive='md'>
+              <Table striped bordered>
                 <thead>
                   <tr>
                     <th>S. No.</th>
@@ -138,7 +136,7 @@ function UserOrders() {
                 </tbody>
               </Table>
               <StyledPagination page={page} setPage={setPage} lastPage={Math.ceil(totalOrders / limit)} />
-            </>
+            </div>
           )}
         </>
       ) : (

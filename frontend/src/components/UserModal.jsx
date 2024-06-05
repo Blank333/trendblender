@@ -38,7 +38,7 @@ function UserModal({ show, onHide, title = " ", user = false }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoad(true);
-    // Update Order
+    // Update User
     axios
       .put(
         `${import.meta.env.VITE_API_URL}/users/${user._id}`,
@@ -133,7 +133,7 @@ function UserModal({ show, onHide, title = " ", user = false }) {
           </Modal.Body>
           <Modal.Footer className='d-flex justify-content-start '>
             <Button className='bg-success-subtle hover-color-custom text-black border-0' type='submit'>
-              {user ? "Update Product" : "Add Product"}
+              {user ? "Update User" : "Add User"}
             </Button>
           </Modal.Footer>
         </Form>

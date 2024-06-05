@@ -89,14 +89,14 @@ function ManageUsers() {
   };
 
   return (
-    <div className='d-flex flex-column gap-2 align-items-center'>
+    <div>
       <StyledHeading heading='Manage Users' custom='bg-danger-subtle' />
       {loading ? (
         <div>
           <StyledLoading anim='grow' size='sm' />
         </div>
       ) : (
-        <>
+        <div className='bg-white p-4 rounded shadow d-flex flex-column gap-2 align-items-center'>
           <div className='d-flex justify-content-end align-items-center w-100'>
             {/* Search */}
             <InputGroup className='mb-3 w-25'>
@@ -108,7 +108,7 @@ function ManageUsers() {
           </div>
 
           {/* All users */}
-          <Table striped bordered responsive='md'>
+          <Table striped bordered>
             <thead>
               <tr>
                 <th>S. No.</th>
@@ -175,7 +175,7 @@ function ManageUsers() {
           <UserModal user={edit} show={edit} onHide={() => setEdit(false)} title='Update user' />
 
           <StyledPagination page={page} setPage={setPage} lastPage={Math.ceil(totalUsers / limit)} />
-        </>
+        </div>
       )}
     </div>
   );

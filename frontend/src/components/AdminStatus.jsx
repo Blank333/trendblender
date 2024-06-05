@@ -45,29 +45,31 @@ function AdminStatus() {
   }, []);
 
   return (
-    <div className='vh-100'>
+    <div className='vh-100 '>
       <StyledHeading heading='Website Status' custom='bg-danger-subtle' />
-      <Table striped bordered className='text-center'>
-        <thead>
-          <tr>
-            <th>Total Products</th>
-            <th>Total Orders</th>
-            <th>Total Users</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{products}</td>
-            <td>{orders}</td>
-            <td>{users}</td>
-          </tr>
-        </tbody>
-      </Table>
-      <div className='d-flex gap-1 align-items-center justify-content-center'>
-        <FontAwesomeIcon icon={faCircle} className={products && users && orders ? "text-success" : "text-danger"} />{" "}
-        <span className='fs-3'>Status: {products && users && orders ? "OK" : "..."}</span>
+      <div className='bg-white p-4 rounded shadow'>
+        <Table striped bordered className='text-center'>
+          <thead>
+            <tr>
+              <th>Total Products</th>
+              <th>Total Orders</th>
+              <th>Total Users</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{products}</td>
+              <td>{orders}</td>
+              <td>{users}</td>
+            </tr>
+          </tbody>
+        </Table>
+        <div className='d-flex gap-1 align-items-center justify-content-center'>
+          <FontAwesomeIcon icon={faCircle} className={products && users && orders ? "text-success" : "text-danger"} />{" "}
+          <span className='fs-3'>Status: {products && users && orders ? "OK" : "..."}</span>
+        </div>
+        <h4 className='text-center'>Please use sidebar to navigate</h4>
       </div>
-      <h4 className='text-center'>Please use sidebar to navigate</h4>
     </div>
   );
 }

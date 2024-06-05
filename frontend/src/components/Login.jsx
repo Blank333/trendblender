@@ -72,9 +72,9 @@ function Login() {
   };
 
   return (
-    <div className='container d-flex flex-column align-items-center gap-2'>
+    <div className='container d-flex flex-column align-items-center gap-2 '>
       <StyledHeading heading='Login' />
-      <div className='col-lg-6 col-12'>
+      <div className='col-lg-6 col-12 bg-white p-4 rounded shadow'>
         <form className='border rounded p-4 d-flex flex-column gap-3'>
           <div>
             <label htmlFor='email' className='form-label text-secondary'>
