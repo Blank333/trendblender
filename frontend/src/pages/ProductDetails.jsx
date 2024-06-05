@@ -75,26 +75,56 @@ function ProductDetails() {
       ) : (
         <Row className='p-3 gap-3 justify-content-between'>
           <Col
-            className='border justify-content-center d-flex object-fit-cover'
+            className='border justify-content-center d-flex object-fit-cover position-relative'
             xs={12}
             lg={5}
             style={{ height: "400px" }}
           >
+            {product.isFeatured && (
+              <>
+                <div
+                  className='position-absolute start-0 bg-warning-subtle px-3 py-1 text-success-emphasis rounded-end'
+                  style={{ top: "20px" }}
+                >
+                  Featured
+                </div>
+              </>
+            )}
+            {product.stock === 0 && (
+              <>
+                <div
+                  className='position-absolute start-0 bg-danger-subtle  px-3 py-1 text-success-emphasis rounded-end'
+                  style={{ top: "20px" }}
+                >
+                  Out of Stock!
+                </div>
+              </>
+            )}
             <Image src={product.imageUrl ? product.imageUrl : noImage} rounded fluid />
           </Col>
           <Col xs={12} lg={4} className='d-flex flex-column gap-3'>
             <div className='border-bottom'>
               <h3>{product.name}</h3>
-              <Rating productRating={product.averageRating} totalReviews={product.numberOfReviews} />
+              <a href='#reviews'>
+                <Rating productRating={product.averageRating} totalReviews={product.numberOfReviews} />
+              </a>
               <h5>₹{product.price}</h5>
             </div>
             <div>{product.description}</div>
+            <div className='d-flex gap-2'>
+              {product.tags?.map((tag) => (
+                <div className='rounded bg-info-subtle py-1 px-2' key={tag}>
+                  {tag}
+                </div>
+              ))}
+            </div>
           </Col>
           <Col xs={12} lg={2} className='border p-3 d-flex flex-column justify-content-between'>
             <div>
               <h5>₹{product.price}</h5>
-              <Rating productRating={product.averageRating} totalReviews={product.numberOfReviews} />
-
+              <a href='#reviews'>
+                <Rating productRating={product.averageRating} totalReviews={product.numberOfReviews} />
+              </a>
               {product.stock === 0 ? (
                 <p className='text-danger'>Out of stock!</p>
               ) : (
@@ -115,7 +145,9 @@ function ProductDetails() {
           {/* Ratings section */}
 
           <AddReview productId={id} />
-          <h4 className='p-0'>Reviews</h4>
+          <h4 className='p-0' id='reviews'>
+            Reviews
+          </h4>
           {reviews.map((review) => (
             <ReviewCard review={review} key={review._id} />
           ))}

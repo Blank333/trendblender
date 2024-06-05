@@ -127,7 +127,7 @@ function ManageProducts() {
           </div>
 
           {/* All products */}
-          <Table striped bordered>
+          <Table striped bordered responsive='md'>
             <thead>
               <tr>
                 <th>S. No.</th>

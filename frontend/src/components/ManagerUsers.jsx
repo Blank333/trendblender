@@ -108,7 +108,7 @@ function ManageUsers() {
           </div>
 
           {/* All users */}
-          <Table striped bordered>
+          <Table striped bordered responsive='md'>
             <thead>
               <tr>
                 <th>S. No.</th>
