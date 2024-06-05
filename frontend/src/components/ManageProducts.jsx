@@ -6,7 +6,16 @@ import { useEffect, useState } from "react";
 import StyledLoading from "./StyledLoading";
 import StyledModal from "./StyledModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faImage, faLink, faPenToSquare, faPlus, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faImage,
+  faLink,
+  faPenToSquare,
+  faPlus,
+  faSearch,
+  faTrash,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import ProductModal from "./ProductModal";
 import UploadModal from "./UploadModal";
 import { Link } from "react-router-dom";
@@ -17,7 +26,7 @@ function ManageProducts() {
   const [page, setPage] = useState(1);
   const [totalProducts, setTotalProducts] = useState(1);
   const [loading, setLoading] = useState(false);
-  const limit = 12;
+  const limit = 50;
   const sort = -1;
 
   const [create, setCreate] = useState(false);
@@ -124,6 +133,8 @@ function ManageProducts() {
                 <th>S. No.</th>
                 <th>Name</th>
                 <th>Description</th>
+                <th>Tags</th>
+                <th>Featured Product</th>
                 <th>Price</th>
                 <th>Stock</th>
                 <th>Actions</th>
@@ -136,6 +147,13 @@ function ManageProducts() {
                   <td>{product.name}</td>
                   <td>
                     {product.description.length > 100 ? product.description.slice(0, 100) + "..." : product.description}
+                  </td>
+                  <td>{product.tags.join(", ")}</td>
+                  <td className='text-center'>
+                    <FontAwesomeIcon
+                      icon={product.isFeatured ? faCheck : faXmark}
+                      className={product.isFeatured ? "text-success" : ""}
+                    />
                   </td>
                   <td>{product.price}</td>
                   <td>{product.stock}</td>

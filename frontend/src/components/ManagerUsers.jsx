@@ -15,7 +15,7 @@ function ManageUsers() {
   const [page, setPage] = useState(1);
   const [totalUsers, setTotalUsers] = useState(1);
   const [loading, setLoading] = useState(false);
-  const limit = 12;
+  const limit = 50;
   const sort = -1;
 
   const [edit, setEdit] = useState(false);

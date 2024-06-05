@@ -1,20 +1,24 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 function App() {
-  // Paypal
+  const route = useLocation();
+
+  // Paypal config
   const initialOptions = {
     "client-id": import.meta.env.VITE_PAYPAL_CLIENT,
     currency: "USD",
     intent: "capture",
   };
+
   return (
     <>
       <Header />
-      <main className='container my-4'>
+      {/* No styles for the homepage */}
+      <main className={route.pathname === "/" ? "" : "container my-4"}>
         <PayPalScriptProvider options={initialOptions}>
           <Outlet />
         </PayPalScriptProvider>

@@ -6,7 +6,7 @@ function Footer() {
       <div className='row text-center'>
         <div className='col-md-3'>
           <h4>
-            <NavLink className='link-custom-unstyled' to='/'>
+            <NavLink className='link-custom-unstyled' to='/products?filter=women'>
               Women
             </NavLink>
           </h4>
@@ -30,7 +30,7 @@ function Footer() {
         </div>
         <div className='col-md-3'>
           <h4>
-            <NavLink className='link-custom-unstyled' to='/'>
+            <NavLink className='link-custom-unstyled' to='/products?filter=men'>
               Men
             </NavLink>
           </h4>
@@ -54,7 +54,7 @@ function Footer() {
         </div>
         <div className='col-md-3'>
           <h4>
-            <NavLink className='link-custom-unstyled' to='/'>
+            <NavLink className='link-custom-unstyled' to='/products?filter=kids'>
               Kids
             </NavLink>
           </h4>
@@ -69,7 +69,7 @@ function Footer() {
               </NavLink>
             </li>
             <li>
-              <NavLink className='link-custom-unstyled' to='/'>
+              <NavLink className='link-custom-unstyled' to='/login'>
                 Login
               </NavLink>
             </li>

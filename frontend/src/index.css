@@ -21,6 +21,9 @@
 .text-custom {
   color: var(--var-secondary-color);
 }
+.text-custom-primary {
+  color: var(--var-primary-color);
+}
 
 .bg-custom-main {
   background-color: var(--var-main-color) !important;

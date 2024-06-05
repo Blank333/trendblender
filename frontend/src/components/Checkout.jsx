@@ -97,7 +97,6 @@ function Checkout() {
 
   const onApprove = (data, actions) => {
     // Update order status
-    console.log(orderID);
 
     return actions.order.capture().then(() => {
       axios
@@ -117,6 +116,9 @@ function Checkout() {
             .then(() => {
               setsteps(3);
               reduxDispatch(clearCart());
+              setTimeout(() => {
+                window.location.href = `/order/${orderID.current}`;
+              }, 2000);
             })
             .catch((err) => {
               console.error(err);
@@ -128,6 +130,9 @@ function Checkout() {
     });
   };
   const onCancel = (data) => {
+    setTimeout(() => {
+      window.location.href = `/order/${orderID.current}`;
+    }, 2000);
     console.log("Cancelled", data);
   };
 

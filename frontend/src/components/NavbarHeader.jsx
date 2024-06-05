@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 import "./NavbarHeader.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { NavDropdown } from "react-bootstrap";
 
 function NavbarHeader() {
   return (
@@ -23,14 +24,18 @@ function NavbarHeader() {
           <NavLink className='nav-link hover-color-custom rounded px-2' to='/products'>
             All Products
           </NavLink>
-          {/* <NavDropdown title='Women' id='basic-nav-dropdown'>
-            <NavLink className='nav-link hover-color-custom rounded px-2' to='/products'>
-              All products
+
+          <NavDropdown title='Categories' id='nav-dropdown'>
+            <NavLink className='nav-link hover-color-custom rounded px-2' to='/products?filter=men'>
+              Men
             </NavLink>
-            <NavLink className='nav-link hover-color-custom rounded px-2' to='/products'>
-              Dresses
+            <NavLink className='nav-link hover-color-custom rounded px-2' to='/products?filter=women'>
+              Women
             </NavLink>
-          </NavDropdown> */}
+            <NavLink className='nav-link hover-color-custom rounded px-2' to='/products?filter=kids'>
+              Kids
+            </NavLink>
+          </NavDropdown>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

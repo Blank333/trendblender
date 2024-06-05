@@ -1,7 +1,7 @@
 import StyledHeading from "../components/StyledHeading";
 import { Button, Container, Form, InputGroup, Table } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faLink, faSearch } from "@fortawesome/free-solid-svg-icons";
 import StyledPagination from "../components/StyledPagination";
 import { useEffect, useState } from "react";
 import StyledLoading from "../components/StyledLoading";
@@ -62,7 +62,12 @@ function UserOrders() {
         (order) =>
           order.user.firstname.toLowerCase().includes(e.target.value.toLowerCase()) ||
           order.user.lastname.toLowerCase().includes(e.target.value.toLowerCase()) ||
-          order.user.email.toLowerCase().includes(e.target.value.toLowerCase())
+          order.user.email.toLowerCase().includes(e.target.value.toLowerCase()) ||
+          order.shipping.address.street.toLowerCase().includes(e.target.value.toLowerCase()) ||
+          order.shipping.address.city.toLowerCase().includes(e.target.value.toLowerCase()) ||
+          order.shipping.address.state.toLowerCase().includes(e.target.value.toLowerCase()) ||
+          order.shipping.address.pincode.toLowerCase().includes(e.target.value.toLowerCase()) ||
+          order.status.toLowerCase().includes(e.target.value.toLowerCase())
       )
     );
   };
@@ -120,8 +125,13 @@ function UserOrders() {
                       </td>
                       <td>{new Date(order.deliveryDate).toLocaleDateString()}</td>
                       <td>{order.status}</td>
-                      <td>
-                        <Link to={`/order/${order._id}`}>Details</Link>
+                      <td className='text-center'>
+                        {/* Order Details link */}
+                        <Link to={`/order/${order._id}`} target='_blank' rel='noopener noreferrer'>
+                          <Button title='Go to product page' className='bg-primary-subtle border-0 text-black'>
+                            <FontAwesomeIcon icon={faLink} />
+                          </Button>
+                        </Link>
                       </td>
                     </tr>
                   ))}

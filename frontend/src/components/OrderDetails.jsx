@@ -46,7 +46,11 @@ function OrderDetails() {
               <p>
                 <strong>Order ID:</strong> {orderDetails._id}
               </p>
-              <p>
+              <p
+                className={
+                  orderDetails.status === "Processing" || orderDetails.status === "Cancelled" ? "text-danger" : ""
+                }
+              >
                 <strong>Status:</strong> {orderDetails.status}
               </p>
               <p>

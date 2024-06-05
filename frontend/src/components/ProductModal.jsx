@@ -1,7 +1,7 @@
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import StyledLoading from "./StyledLoading";
-import { Form, InputGroup } from "react-bootstrap";
+import { ButtonGroup, Form, InputGroup, ToggleButton } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -13,10 +13,13 @@ function ProductModal({ show, onHide, title = " ", product = false }) {
     description: "",
     stock: 0,
     imageUrl: "",
+    tags: [],
   });
   const [load, setLoad] = useState(false);
   const [result, setResult] = useState("");
   const [image, setImage] = useState();
+  const [tagsInfo, setTagsInfo] = useState("");
+  const [isFeatured, setIsFeatured] = useState(false);
 
   const clearInfo = () => {
     setProductInfo({
@@ -25,12 +28,15 @@ function ProductModal({ show, onHide, title = " ", product = false }) {
       description: "",
       stock: 0,
       imageUrl: "",
+      tags: [],
     });
   };
 
   useEffect(() => {
     clearInfo();
     if (product) {
+      setIsFeatured(product.isFeatured);
+      setTagsInfo(product.tags.join(", "));
       setProductInfo({
         ...product,
       });
@@ -40,12 +46,16 @@ function ProductModal({ show, onHide, title = " ", product = false }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoad(true);
+
+    // Create the tags into an array
+    productInfo.tags = tagsInfo.replaceAll(",", "").split(" ");
+
     //If product exists then we update it else we create a new ones
     if (product) {
       axios
         .put(
           `${import.meta.env.VITE_API_URL}/products/${product._id}`,
-          { ...productInfo },
+          { ...productInfo, isFeatured },
           {
             headers: { Authorization: localStorage.getItem("token") },
           }
@@ -74,7 +84,7 @@ function ProductModal({ show, onHide, title = " ", product = false }) {
           axios
             .post(
               `${import.meta.env.VITE_API_URL}/products`,
-              { ...productInfo, imageUrl: res.data.url },
+              { ...productInfo, imageUrl: res.data.url, isFeatured },
               {
                 headers: { Authorization: localStorage.getItem("token") },
               }
@@ -99,8 +109,20 @@ function ProductModal({ show, onHide, title = " ", product = false }) {
 
   const handleChange = (e) => {
     const { id, value } = e.target;
+    //Handling tags
+    if (id === "tags") {
+      productInfo.tags = value;
+      return setTagsInfo(value);
+    }
+
+    // Handle featured
+    if (id === "featured") {
+      return console.log(value);
+    }
+
     setProductInfo({ ...productInfo, [id]: value });
   };
+
   return (
     <>
       <Modal show={show} onHide={onHide} centered backdrop='static'>
@@ -121,7 +143,7 @@ function ProductModal({ show, onHide, title = " ", product = false }) {
                 required
                 value={productInfo.name}
               />
-            </InputGroup>{" "}
+            </InputGroup>
             <InputGroup>
               <InputGroup.Text className='w-25'>Price</InputGroup.Text>
               <Form.Control
@@ -194,6 +216,35 @@ function ProductModal({ show, onHide, title = " ", product = false }) {
                 </div>
               </InputGroup>
             )}
+            <InputGroup>
+              <InputGroup.Text className='w-25'>Tags</InputGroup.Text>
+              <Form.Control id='tags' type='text' className='shadow-none' onChange={handleChange} value={tagsInfo} />
+            </InputGroup>
+
+            <ButtonGroup className='mb-2'>
+              <ToggleButton
+                className={(isFeatured ? "bg-success-subtle text-black" : "bg-secondary") + " border-0"}
+                id='isFeaturedT'
+                type='radio'
+                name='radio'
+                value={true}
+                checked={isFeatured}
+                onChange={() => setIsFeatured(true)}
+              >
+                Featured
+              </ToggleButton>
+              <ToggleButton
+                className={(!isFeatured ? "bg-danger-subtle text-black" : "bg-secondary") + " border-0"}
+                id='isFeaturedF'
+                type='radio'
+                name='radio'
+                value={false}
+                checked={!isFeatured}
+                onChange={() => setIsFeatured(false)}
+              >
+                Not Featured
+              </ToggleButton>
+            </ButtonGroup>
           </Modal.Body>
           <Modal.Footer className='d-flex justify-content-start '>
             <Button className='bg-success-subtle hover-color-custom text-black border-0' type='submit'>

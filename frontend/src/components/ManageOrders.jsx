@@ -5,8 +5,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import StyledLoading from "./StyledLoading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faLink, faPenToSquare, faSearch } from "@fortawesome/free-solid-svg-icons";
 import OrderModal from "./OrderModal";
+import { Link } from "react-router-dom";
 
 function ManageOrders() {
   const [orders, setOrders] = useState([]);
@@ -14,7 +15,7 @@ function ManageOrders() {
   const [page, setPage] = useState(1);
   const [totalOrders, setTotalOrders] = useState(1);
   const [loading, setLoading] = useState(false);
-  const limit = 12;
+  const limit = 50;
   const sort = -1;
 
   const [edit, setEdit] = useState(false);
@@ -62,7 +63,12 @@ function ManageOrders() {
         (order) =>
           order.user.firstname.toLowerCase().includes(e.target.value.toLowerCase()) ||
           order.user.lastname.toLowerCase().includes(e.target.value.toLowerCase()) ||
-          order.user.email.toLowerCase().includes(e.target.value.toLowerCase())
+          order.user.email.toLowerCase().includes(e.target.value.toLowerCase()) ||
+          order.shipping.address.street.toLowerCase().includes(e.target.value.toLowerCase()) ||
+          order.shipping.address.city.toLowerCase().includes(e.target.value.toLowerCase()) ||
+          order.shipping.address.state.toLowerCase().includes(e.target.value.toLowerCase()) ||
+          order.shipping.address.pincode.toLowerCase().includes(e.target.value.toLowerCase()) ||
+          order.status.toLowerCase().includes(e.target.value.toLowerCase())
       )
     );
   };
@@ -134,6 +140,13 @@ function ManageOrders() {
                     >
                       <FontAwesomeIcon icon={faPenToSquare} />
                     </Button>
+
+                    {/* Order Details link */}
+                    <Link to={`/order/${order._id}`} target='_blank' rel='noopener noreferrer'>
+                      <Button title='Go to product page' className='bg-primary-subtle border-0 text-black'>
+                        <FontAwesomeIcon icon={faLink} />
+                      </Button>
+                    </Link>
                   </td>
                 </tr>
               ))}
