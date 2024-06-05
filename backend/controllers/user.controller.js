@@ -85,11 +85,20 @@ exports.updateOne = (req, res) => {
   if (!/\S+@\w+\.\w+(\.\w+)?/.test(email)) return res.status(400).json({ error: "Invalid email" });
 
   //Remove password from returned user
-  User.findByIdAndUpdate(id, updateInfo, { projection: { password: 0 }, new: true, runValidators: true })
+  User.findById(id)
     .then((user) => {
       if (!user) return res.status(404).json({ error: "User not found" });
-      return res.status(200).json({ message: `Information updated!` });
+      if (user.email === "admin@admin.com") return res.status(400).json({ error: "Cannot update admin account" });
+
+      User.updateOne({ _id: user }, updateInfo, { projection: { password: 0 }, new: true, runValidators: true })
+        .then(() => {
+          return res.status(200).json({ message: `Information updated!` });
+        })
+        .catch((err) => {
+          return res.status(500).json({ error: `Server Error ${err}` });
+        });
     })
+
     .catch((err) => {
       return res.status(500).json({ error: `Server Error ${err}` });
     });
@@ -107,11 +116,20 @@ exports.updateProfile = (req, res) => {
   if (!/\S+@\w+\.\w+(\.\w+)?/.test(email)) return res.status(400).json({ error: "Invalid email" });
 
   //Remove password from returned user
-  User.findByIdAndUpdate(id, updateInfo, { projection: { password: 0 }, new: true, runValidators: true })
+  User.findById(id)
     .then((user) => {
       if (!user) return res.status(404).json({ error: "User not found" });
-      return res.status(200).json({ message: `Information updated!` });
+      if (user.email === "admin@admin.com") return res.status(400).json({ error: "Cannot update admin account" });
+
+      User.updateOne(user, updateInfo, { projection: { password: 0 }, new: true, runValidators: true })
+        .then(() => {
+          return res.status(200).json({ message: `Information updated!` });
+        })
+        .catch((err) => {
+          return res.status(500).json({ error: `Server Error ${err}` });
+        });
     })
+
     .catch((err) => {
       return res.status(500).json({ error: `Server Error ${err}` });
     });
